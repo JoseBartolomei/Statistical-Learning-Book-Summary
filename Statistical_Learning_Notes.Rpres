@@ -1,0 +1,871 @@
+Statistical Learning Notes
+========================================================
+author: 
+date: 
+
+Chapter 2
+========================================================
+
+- There are two main reasons that we may wish to estimate f : prediction and inference.
+
+- Inference
+
+Prediction
+========================================================
+- Prediction: We want to obtain the unknown value of an output ($Y$) using the known values of inputs ($X's$)
+	- $$\hat{Y} = \hat{f}(X)$$
+
+- where 
+	- $\hat{f}$ represents our estimate for $f$
+	- $\hat{Y}$ represents the resulting prediction for Y .
+
+Prediction
+========================================================
+$$E(Y-\hat{Y})^2 = [f(X) - \hat{f}(X)^2] + Var(\epsilon)$$
+
+- The accuracy of $\hat{Y}$ as a prediction for $Y$ depends on two quantities,
+	- reducible error: This error is reducible because we can potentially improve the accuracy of $\hat{f}$ by using the most appropriate statistical learning technique to estimate $f$.
+	- irreducible error: Y is also a function of $\epsilon$, which, by definition, cannot be predicted using X. Therefore, variability associated with also affects the accuracy of our predictions.
+		- No matter how well we estimate $f$, we cannot reduce the error introduced by $\epsilon$.
+		
+Inference
+========================================================
+- In inference we want to understand the relationship between $X$ and $Y$, or more specifically, to understand how $Y$ changes as a function of $X_1 , . . . , X_p$.
+
+- For inference we may ask:
+	- Which predictors are associated with the response?
+	- What is the relationship between the response and each predictor?
+	- Can the relationship between Y and each predictor be adequately summarized using a linear equation, or is the relationship more complicated?
+	
+How Do We Estimate f?
+========================================================
+
+$f$ is estimated by parametric or non-parametric functions
+
+Parametric
+========================================================
+Parametric methods involve a two-step approach
+
+1. Make an assumption about the functional form, or shape, of $f$ (eg., linear, quadratic, etc).
+
+2. Find a procedure that uses the training data to fit or train the model (eg., ordinary least square, maximum likelihood, etc).
+
+Non-Parametric
+========================================================
+
+- Non-parametric methods do not make explicit assumptions about the functional form of $f$. Instead they seek an estimate of f that gets as close to the data points as possible without being too rough or wiggly.
+
+- Advantages: by avoiding the assumption of a particular functional form for $f$, they have the potential to accurately fit a wider range of possible shapes for $f$. Any parametric approach brings with it the possibility that the functional form used to estimate f is very different from the true $f$, in which case the resulting model will not fit the data well. In contrast, non-parametric approaches completely avoid this danger, since essentially no assumption about the form of $f$ is made.
+
+Non-Parametric disadvantage
+========================================================
+
+Since they do not reduce the problem of estimating $f$ to a small number of parameters, a very large number of observations (far more
+than is typically needed for a parametric approach) is required in order to obtain an accurate estimate for $f$.
+
+The Trade-Off Between Prediction Accuracy and Model Interpretability
+========================================================
+
+- Some models are less flixble or restrictive, in the sense that they can produce just a relatively small range of shapes to estimate $f$.
+- Flexible vs non-flexible
+	- interested in inference, then restrictive models are much more interpretable.
+	- If prediction is of interest less interpretable but more flexible and accurate models are useful.
+	
+Supervised Versus Unsupervised Learning
+========================================================
+- Supervised: For each observation of the predictor measurement(s) $x_i , i = 1, . . . , n$ there is an associated response measurement $y_i$ .
+	- We wish to fit a model that relates the response to the predictors, with the aim of accurately predicting the response for future observations (prediction) or better understanding the relationship between the response and the predictors (inference).
+	- examples: linear or logistic regression, Generalized Additive Model, boosting, support vecto machines.
+
+Supervised Versus Unsupervised Learning
+========================================================
+- Unsuppervised: For every observation $i = 1, . . . , n$, we observe a vector of measurements $x_i$ but no associated response $y_i$.
+- Lack a response variable that can supervise our analysis.
+- With this analysis is possible to understand the relationship between variables or between the observations.
+	- examples: cluster analysis, clustering
+
+Regression Versus Classification Problems
+========================================================
+- Regression: Usually used when the response is quantitative
+- Classification: Usually used when the response is qualitative
+
+However, the distinction is not always that crisp at the moment of select a statistical methods because some models can be extended to work with both, quantitative and qualitative response.
+
+Assessing Model Accuracy: Measuring the Quality of Fit
+========================================================
+When assessing the quality of the fit we want to:
+
+1. measure how well its predictions actually match the observed data.
+2. quantify the extent to which the predicted response value for a given observation is close to the true response value for that observation.
+3. The most common measure is the mean squared error (MSE)
+
+$$MSE = \frac{1}{n}\sum_{i=1}^n(y_i-\hat{f}(x_i))^2$$
+
+MSE
+========================================================
+The MSE will be **small** if the predicted responses are very close to the true responses, and will be **large** if for some of the observations, the predicted and true responses differ substantially.
+
+- we do not really care how well the method works on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unsen test data.
+
+- We want to choose the method that gives the lowest test MSE, as opposed to the lowest training MSE.
+
+- If test data is available, implement learning methods to the test data and select the model with the small value of MSE.
+
+MSE
+========================================================
+
+- Degrees of freedom is the average training MSE as a function of flexibility. The degrees of freedom is a quantity that summarizes the flexibility of a curve.
+
+-  As model flexibility increases, training MSE will decrease, but the test MSE may not.
+
+- This is a fundamental property of statistical learning that holds regardless of the particular data set at hand and regardless of the statistical method being used. 
+- When a given method yields a small training MSE but a large test MSE, we are said to be overfitting the data.
+
+MSE
+========================================================
+- This happens because our statistical learning procedure is working too hard to find patterns in the training data, and may be picking up some patterns that are just caused by random chance rather than by true properties of the unknown function $f$.
+
+- When we overfit the training data, the test MSE will be very large because the supposed patterns that the method found in the training data simply don’t exist in the test data.
+
+- Overfitting refers specifically to the case in which a less flexible model would have yielded a smaller test MSE.
+
+The Bias-Variance Trade-Off
+========================================================
+- The U-shape usually observed in a test MSE curves turns out to be the result of two competing properties of statistical learning methods: Bias and Variance.
+
+- Expected test MSE, for a given value $x_0$, can always be decomposed into the sum of three fundamental quantities: 
+	- the variance of $\hat{f}(x_0)$,
+	- the squared bias of $\hat{f}(x_0)$
+	- the variance of the error terms ($\epsilon$)
+
+- We want a statistical learning method that simultaneously achieves
+low variance and low bias.
+
+The Bias-Variance Trade-Off: Variance
+========================================================
+- Variance refers to the amount by which $\hat{f}$ would change if we estimated it using a different training data set. Since the training data are used to fit the statistical learning method, different training data sets will result in a different $\hat{f}$.
+
+- If a method has high variance then small changes in the training data can result in large changes in $\hat{f}$. 
+
+- In general, more flexible statistical methods have higher variance.
+
+The Bias-Variance Trade-Off: Bias
+========================================================
+- Bias refers to the error that is introduced by approximating a real-life problem, which may be extremely complicated, by a much
+simpler model.
+
+- Generally, more flexible methods result in less bias.
+
+- As a general rule, as we use more flexible methods, the variance will increase and the bias will decrease.
+
+The Bias-Variance Trade-Off: Equation
+========================================================
+The mentioned can be sumarrized with the following equation
+
+$$E(y_0 - \hat{f}(x_0))^2 = Var\hat{f}(x_0) + [Bias\hat{f}(x_0)] + Var(\epsilon)$$
+
+The Classificatin Setting
+========================================================
+- Many of the concepts that we have encountered, such as the bias-variance trade-off, can be transfer over to the classification setting with only some modifications due to the fact that $y_i$ is no longer numerical.
+
+- The most common approach for quantifying the accuracy of our estimate $\hat{f}$ is the training error rate, the proportion of mistakes that are made if we apply our estimate $\hat{f}$ to the training observation by computing the fraction of incorrect classifications.
+
+- A good classifier is one for which the test error, $Ave(I(y_0 \neq \hat{y}_0))$, is smallest. Refer to page 37.
+
+- We want to assess the uncertainty in each classification and understand the roles of the different predictors among $X = (X_1, X_2, ..., X_p)$
+
+The Bayes Classifier
+========================================================
+- The test error rate, $Ave(I(y_0 \neq \hat{y}_0))$, is minimized, on average, by a very simple classifier that assigns each observation to the most likely class, given its predictor values.
+
+- Bayes classifier is a conditional probability or the probability
+that $Y = j$, given the observed predictor vector $x_0$.
+
+- The Bayes classifier produces the lowest possible test error rate, called
+the Bayes error rate.
+
+K-Nearest Neighbors
+========================================================
+- in real data, we do not know the conditional distribution of $Y$ given $X$, and so computing the Bayes classifier is impossible.
+
+- K-Nearest Neighbors: Given a positive integer $K$ and a test observation $x_0$, the KNN classifier first identifies the $K$ points in the training data that are closest to $x_0$ , represented by $N_0$.
+
+- KNN applies Bayes rule and classifies the test observation $x_0$ to the class with the largest probability.
+
+K-Nearest Neighbors
+========================================================
+
+- The choice of K has a drastic effect on the KNN classifier obtained.
+
+- When $K = 1$, the decision boundary is overly flexible and finds patterns in the data that don’t correspond to the Bayes decision boundary. This corresponds to a classifier that has low bias but very high variance.
+
+- As $K$ grows, the method becomes less flexible and produces a decision boundary that is close to linear. This corresponds to a low-variance but high-bias classifier.
+
+The Classificatin Setting
+========================================================
+
+- Other types of Classification Methods are: Support Vector Machine, forms of Logistic and Linear Regression and Dyscriminant Analysis
+
+Chapter 3: Linear Regression
+========================================================
+- Linear regression is a useful tool for predicting a quantitative response.
+- We are estimating the population regression line, which is the best linear approximation to the true relationship between $X$ and $Y$ .
+
+- The population regression line is unknown but estimated using statistical methods.
+
+Important questions that we might seek to address:
+========================================================
+1. Is there a relationship between the predictor $X$ an the response $Y$?
+2. How strong is the relationship between the predictor $X$ an the response $Y$?
+3. Which predictors $X's$ contribute to the response $Y$?
+4. How accurately can we estimate the effect of each predictors ($X's$)?
+5. How accurately can we predict future response?
+6. Is the relationship linear?
+7. Is there synergy (interaction) among the predictors ($X's$)?
+
+Simple Linear Regression
+========================================================
+- It is a very straightforward approach for predicting a quantitative response Y on the basis of a single predictor variable X. 
+- It assumes that there is approximately a linear relationship between X and Y. 
+- Mathematically, we can write this linear relationship as:
+
+$$\hat{Y} \approx [\hat{\beta_0} + \hat{\beta}_1x_1 + ... + \hat{\beta}_px_p] + [e_i]$$
+
+Simple Linear Regression
+========================================================
+
+Where:
+
+  - $\hat{\beta}_0 =$ intercept $=$ the expected value of $Y$ when $X = 0$.
+  
+  - $\hat{\beta_1} =$ slope $=$ the average increase in $Y$ associated with a one-unit increase in $X$.
+  
+- $e_i = y_i − \hat{y}_i$ represents the ith residual, this is the difference between the $i^{th}$ observed response value and the $i^{th}$ response value that is predicted by our linear model.
+
+Simple Linear Regression
+========================================================
+- The objective is to find an intercept $\hat{\beta}_0$ and a slope $\hat{\beta}_1$ such that the resulting line is as close as possible to the data points. There are a number of ways of measuring closeness. However, by far the most common approach involves minimizing the **least squares criterion**.
+
+Estimating the Coefficients
+========================================================
+If $e_i = y_i − \hat{y}_i$
+
+Then the residual sum of squares (RSS) is:
+
+$$RSS = e^2_1 + e^2_2 + .... e^2_n$$
+
+or equivalently as:
+
+$$RSS = (y_1 -\hat{\beta_0} + \hat{\beta}_1x_1)^2 + (y_2 -\hat{\beta_0} + \hat{\beta}_1x_2)^2 + .... (y_n -\hat{\beta_0} + \hat{\beta}_1x_n)^2$$
+
+- The least squares approach chooses $\hat{β}_0$ and $\hat{β}_1$ to minimize the RSS.
+
+Estimating the Coefficients
+========================================================
+Least squares coefficient estimates for simple linear regression
+
+- $\hat{\beta}_1 = \frac{\sum^i_{n = 1}(x_i - \bar{x})(y_i - \bar{y})}{\sum^i_{n = 1}(x_i - \bar{x})^2}$
+
+- $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x}$
+
+Assessing the Accuracy of the Coefficient Estimates
+========================================================
+
+- Unbiased estimate: If we use the sample mean $\hat\mu$ to estimate $\mu$, this estimate is unbiased, in the sense that on average, we expect $\hat\mu$ to equal $\mu$.
+
+- Standard error of μ ($SE(\hat\mu)$): Give a measure of how far the estimate of the average ($\hat\mu$) is from the real average ($\mu$) or the average amount that this estimate $\hat\mu$ differs from the actual value of $\mu$.
+
+- Standard error tells us how this deviation shrinks with $n$. The more observations we have, the smaller the standard error of $\mu$.
+
+Assessing the Accuracy of the Coefficient Estimates
+========================================================
+
+- $VAR(\hat\mu) = SE(\hat\mu)^2 = \frac{\sigma^2}{n}$
+
+  - $\sigma$ is the standard deviation of each of the realizations $y_i$ of $Y$.
+  
+- The more observations we have, the smaller the standard error of $\hat\mu$.
+
+- Then is possible to estimate how close are the estimated regression coefficients from the true values of the regression coefficients. Refer to page 66 for formulas.
+
+Assessing the Accuracy of the Coefficient Estimates
+========================================================
+
+- Residual standard error (RSE) estimate the squared variance ($\sigma^2$) of the model coefficients:
+  - $RSE = RSS/(n − 2)$
+
+- Standard errors can be used to compute confidence intervals. A 95% confidence interval is defined as a range of values such that with 95% probability, the range will contain the true unknown value of the parameter.
+
+- Confidence intervals for regression parameters
+  - $\hat\beta_1 \pm 2 * SE(\hat\beta_1)$
+  - $\hat\beta_0 \pm 2 * SE(\hat\beta_0)$
+
+Hypothesis Testing
+========================================================
+- Standard errors can also be used to perform hypothesis tests on the
+coefficients. The most common hypothesis test involves testing the null
+hypothesis of $H_0$: There is no relationship between X and Y versus the alternative hypothesis $H_a$: There is some relationship between X and Y.
+
+- Mathematically, this corresponds to testing
+
+$$H_0 : \beta_1 = 0$$
+
+versus
+
+$$H_a: \beta_1 \neq 0$$
+
+Hypothesis Testing
+========================================================
+
+- To test the null hypothesis, we need to determine whether $\hat\beta_1$, our estimate for $\beta_1$, is sufficiently far from zero that we can
+be confident that $\beta_1$ is non-zero. How far is far enough?
+
+- If SE($\hat\beta_1$) is small, then even relatively small values of $\hat\beta_1$ may provide strong evidence that $\beta_1 \neq 0$, and hence that there is a relationship between $X$ and $Y$. 
+
+```{r}
+# Coeff / SE
+7.0325 / 0.4578
+# Coeff / SE
+7.0325 / 0.0475
+```
+
+
+Hypothesis Testing
+========================================================
+- In contrast, if SE($\hat\beta_1$) is large, then $\hat\beta_1$ must be large in absolute value in order for us to reject the null hypothesis.
+
+```{r}
+# Coeff / SE
+7.0325 / 0.9578
+# Coeff / SE
+177.0325 / 0.9578
+```
+
+Hypothesis Testing
+========================================================
+- In practice, we compute a t-statistic, which measures the number of standard deviations that $\hat\beta_1$ is away from $0$.
+
+$$t = \frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}$$
+
+- If there really is no relationship between X and Y , then we expect a t-distribution with n − 2 degrees of freedom.
+
+- Then, can be computed the probability of observing any value equal to $|t|$ or larger, assuming $\beta_1 = 0$, p-value.
+
+Hypothesis Testing
+========================================================
+- The p-value can be interpreted as follows: a small p-value indicates that it is unlikely to observe such a substantial association between the predictor and the response due to chance, in the absence of any real association between the predictor and the response.
+
+Assessing the Accuracy of the Model
+========================================================
+- Once we have rejected the null hypothesis in favor of the alternative
+hypothesis it is natural to want to quantify the extent to which the
+model fits the data. 
+
+- The quality of a linear regression fit is typically assessed using two related quantities: 
+  - Residual Standard Error (RSE)
+  - $R^2$ statistic.
+
+Residual Standard Error (RSE)
+========================================================
+The Residual Standard Error (RSE) is an estimate of the standard deviation of $\epsilon$. 
+- The average amount that the response will deviate from the true regression line.
+- The RSE is considered a measure of the lack of fit of the model to the data.
+
+$$RSE = \sqrt{\frac{1}{n-2}*RSS} = \sqrt{\frac{1}{n-2}* \sum^n_{1=i}(y_i - \bar{y_i})^2}$$
+
+- If the predictions obtained using the model are very close to the true outcome values ($\hat{y}_i ≈ y_i$ for $i = 1, . . . , n$) the $RSE$ will be small, and we can conclude that the model fits the data very well. On the other hand, if $\hat{y}_i$ is very far from $y_i$ for one or more observations, then the $RSE$ may be quite large, indicating that the model doesn’t fit the data well.
+
+Percentage Error
+========================================================
+- It can give use a perspective of the spread of error found by the $RSE$ respective to the mean value of $y_i$.
+
+$$PE = RSE / \hat{y}$$
+
+R-squared Statistic
+========================================================
+- The $R^2$ statistic provides an alternative measure of fit. It takes the form of a proportion — **the proportion of variance explained** — and so it always takes on a value between $0$ and $1$, and is independent of the scale of $Y$.
+
+$$R^2 = \frac{TSS-RSS}{TSS} = 1 - \frac{RSS}{TSS}$$
+
+- Total Sum of Squares measures the total variance in the response $Y$, and can be thought of as the amount of variability inherent in the response before the regression is performed.
+
+$$TSS = \sum{(y_i - \bar{y})^2}$$
+
+R-squared Statistic
+========================================================
+- Residual Sum of Square measures the amount of variability that is left unexplained after performing the regression.
+
+- $TSS − RSS$ measures the amount of variability in the response that is explained (or
+removed) by performing the regression.
+
+R-squared Statistic
+========================================================
+
+- $R^2$ measures the proportion of variability in $Y$ that can be explained using $X$.
+
+- An $R^2$ statistic that is close to 1 indicates that a large proportion of the variability in the response has been explained by the regression. A number near 0  indicates that the regression did not explain much of the variability in the response; this might occur because the linear model is wrong, or the inherent error $σ^2$ is high,
+or both.
+
+- $R^2$ has an interpretational advantage over the RSE, since unlike the RSE, it always lies between 0 and 1.
+
+Multiple Linear Regression
+========================================================
+
+- An extension of the simple linear regression model so that it can directly accommodate multiple predictors.
+- The parameters are estimated using the same least squares approach.
+- The results of the the simple and multiple regression coefficients can be quite different. This is due to in simpe regression is ignoring the effect of other predictors in the model.
+
+- The multiple model one of the coefficients ($X_1$) represents the average effect on $Y$ while holding constant the other predictors.
+
+Important questions in Multiple Linear Regression
+========================================================
+
+1. Is at least one of the predictors $X_1, X_2, . . . , X_p$ useful in predicting
+the response?
+
+2. Do all the predictors help to explain $Y$, or is only a subset of the
+predictors useful?
+
+3. How well does the model fit the data?
+
+4. Given a set of predictor values, what response value should we predict,
+and how accurate is our prediction?
+
+Multiple Linear Regression
+========================================================
+- In the multiple regression setting with $p$ ppredictors, we need to ask whether all of the regression coefficients are zero, i.e. whether $β_1 = β_2 = · · · = β_p = 0$.
+
+- Hypothesis
+
+$H_0: \beta_1 = \beta_2 = · · · = \beta_p = 0$
+
+versus the alternative
+
+$H_a:$ at least one $\beta_j$ is non-zero
+
+F-statistic: Multiple Linear Regression
+========================================================
+
+- This hypothesis test is performed by computing the $F-statistic$,
+
+$$F=\frac{(TSS-RSS)/p}{RSS/(n-p-1)}$$
+
+- When there is no relationship between the response and predictors, one would expect the F-statistic to take on a value close to 1.
+
+- How large does the F-statistic need to be before we can reject H 0 and conclude that there is a relationship?: When $n$ is large, an F-statistic that is just a little larger than $1$ might still provide evidence against $H_0$. In contrast, a larger F-statistic is needed to reject $H_0$ if $n$ is small.
+
+- Based on this p-value, of the F distribution we can determine whether or not to reject $H_0$.
+
+Testing that a particular subset of q
+========================================================
+- We fit a second model that uses all the variables except those last q.
+
+$H_0: \beta_{p-q+1} = \beta_{p-q+2} = · · · = \beta_{p} = 0$
+
+- The appropiate F statistic is:
+
+$$F=\frac{(RSS_0-RSS)/q}{RSS/(n-p-1)}$$
+
+- It reports the partial effect of adding that variable to the model.
+
+- Is important to use the $F$ statistic because if we use the individual t-statistics and associated p-values in order to decide whether or not there is any association betweenthe variables and the response, there is a very high chance that we will incorrectly conclude that there is a relationship. Review page 77
+
+Testing that a particular subset of q
+========================================================
+- The approach of using an F-statistic to test for any association between the predictors and the response works when $p$ is relatively small, and certainly small compared to $n$. However, sometimes we have a very large number of variables. If $p > n$ then there are more coefficients $\beta_j$ to estimate, so the than observations from which to estimate them. In this case we cannot even fit the multiple linear regression model using least squares, so the F-statistic cannot be used, and neither can most of the other concepts that we have seen so far.
+
+Deciding on Important Variables
+========================================================
+- Variable selection: The task of determining which predictors are associated with
+the response, in order to fit a single model involving only those predictors.
+
+- We could look at the individual p-values if p is large we are likely to make some false discoveries.
+
+- Various statistics can be used to judge the quality of a model. These include Mallow’s $C_p$ , Akaike information criterion (AIC), Bayesian information criterion (BIC), and adjusted $R^2$.
+
+- There are a total of $2^p$ models that contain subsets of $p$ variables. Unless $p$ is very small, we cannot consider all $2^p$ models, and instead we need an automated and efficient approach to choose a smaller set of models to consider.
+
+Deciding on Important Variables
+========================================================
+- Forward selection. We begin with the null model—a model that contains an intercept but no predictors. We then fit $p$ simple linear regressions and add to the null model the variable that results in the lowest RSS. We then add to that model the variable that results in the lowest RSS for the new two-variable model. This approach is continued until some stopping rule is satisfied.
+
+- Backward selection. We start with all variables in the model, and remove the variable with the largest p-value—that is, the variable that is the least statistically significant. The new ($p − 1$)-variable model is fit, and the variable with the largest p-value is removed. This procedure continues until a stopping rule is reached. For instance, we
+may stop when all remaining variables have a p-value below some threshold.
+
+Deciding on Important Variables
+========================================================
+- Mixed selection. This is a combination of forward and backward selection. We start with no variables in the model, and as with forward selection, we add the variable that provides the best fit. We continue to add variables one-by-one. Of course, as we noted with the Advertising example, the p-values for variables can become larger as new predictors are added to the model. Hence, if at any point the p-value for one of the variables in the model rises above a certain threshold, then we remove that variable from the model. We continue to perform these forward and backward steps until all variables
+in the model have a sufficiently low p-value, and all variables outside the model would have a large p-value if added to the model.
+
+- Backward selection cannot be used if $p > n$, while forward selection can always be used. Forward selection is a greedy approach, and might include variables early that later become redundant. Mixed selection can remedy this.
+
+Model Fit
+========================================================
+
+- Two of the most common numerical measures of model fit are the RSE and $R^2$, the fraction of variance explained.
+
+- It turns out that $R^2$ will always increase when more variables are added to the model, even if those variables are only weakly associated with the response. This is due to the fact that adding another variable to the least squares equations must allow us to fit the training data (thoughnot necessarily the testing data) more accurately.
+
+- Models with more variables can have higher $RSE$ if the decrease in $RSS$ is small relative
+to the increase in $p$.
+
+Predictions
+========================================================
+
+There are three sorts of uncertainty associated with linear prediction.
+
+1. An inaccuracy in the coefficient estimates is related to the reducible error. Confidence interval can be computed a  in order to determine how close $\hat{Y}$ will be to $f(X)$.
+
+2. Model bias: an additional source of potentially reducible error.
+
+3. Even if we knew $f(X)$ the response value cannot be predicted perfectly because of the random error. How much will $Y$ vary from $\hatY$? We use prediction intervals to answer this question. Prediction intervals are always wider than confidence intervals, because they incorporate both the error in the estimate for $f(X)$ (the reducible error) and the uncertainty as to how much an individual point will differ from the population regression plane (the irreducible error).
+
+Extensions of the Linear Model
+========================================================
+- The standard linear regression model provides interpretable results and works quite well on many real-world problems. However, it makes several highly restrictive assumptions that are often violated in practice.
+
+- Assumptions: relationship between the predictors and response are *additive* and *linear*.
+
+
+Removing the Additive Assumption
+========================================================
+
+- One way of extending the linear model to allow for interaction effects is to include a third predictor, called an interaction term, which is constructed by computing the product of $X_1$ and $X_2$.
+
+Chater 3 incomplete - needs to be finished
+========================================================
+
+Classification
+========================================================
+- Classification is used when the response variable is qualitative
+
+- Classification: Statistical aspproaches for predicting qualitative responses.
+
+- Classifying an observation: Predicting a qualitative response for an observation, since it involves assigning the observation to a category, or class.
+
+- Most widely-used classifiers: logistic regression, linear discriminant analysis, and K-nearest neighbors.
+
+The Logic Model
+========================================================
+- Linear regression is not adequate methods for categorical responses because values close 0 would return a negative probability of the response; if we were to predict for very large values, we would get values bigger than 1. These predictions are not sensible, since must fall between 0 and 1.
+
+- To avoid this problem, we must model $p(X)$ using a function that gives
+outputs between $0$ and $1$ for all values of $X$. Many functions meet this
+description such as the logic model.
+
+The Logic Model
+========================================================
+- logistic function
+
+$$p(X) = \frac{e^{\beta_0+\beta_1X}}{1 + e^{\beta_0+\beta_1X}}$$
+
+- The maximum likelihood method is used to fit the model
+
+- The logistic function will always produce an S-shaped curve of this form, and so regardless of the value of $X$, we will obtain a sensible prediction.
+
+Odds
+========================================================
+$$\frac{p(X)}{1-p(X)} = e^{\beta_0+\beta_1X}$$
+
+The quantity $p(X)/[1 − p(X)]$ is called the odds, and can take on any value between $0$ and $\infty$. Values of the odds close to 0 and $\infty$ indicate very low and very high probabilities of default, respectively.
+
+Logistic Regression Model
+========================================================
+$$log(\frac{p}{1-p}) = \beta_0 + \beta_1 X$$
+
+- In a logistic regression model, increasing X by one unit changes the log odds by $\beta_1$, or equivalently it multiplies the odds by $e^\beta_1$.
+
+- There is not a straight-line relationship between $p(X)$ and $X$. The amount that $p(X)$ changes due to a one-unit change in $X$ will depend on the current value of $X$.
+
+- Regardless of the value of $X$, if $\beta_1$ is positive then increasing $X$ will be associated with increasing $p(X)$, and if $\beta_1$ is negative then increasing $X$ will be associated with decreasing $p(X)$.
+
+Estimating the Regression Coefficient
+========================================================
+
+- The maximum likelihood method (MML) is preferred to estimate logistic parameters, since it has better statistical properties.  
+
+- MML:
+  - we seek estimates for $\beta_0$ and $\beta_1$ such that the predicted probability $p^(x_i)$ of $Y$ for each individual, corresponds as closely as possible to the individual’s observed $Y$. In other words, we try to find β ˆ 0 and β ˆ 1 such that plugging
+these estimates into the model for p(X), given in (4.2), yields a number
+close to one for all individuals who defaulted, and a number close to zero
+for all individuals who did not.
+
+Hypothesis test in MML
+========================================================
+- The z-statistics is use to test hypothesis $H_0: \beta = 0$
+
+- The z-statistic associated with $\beta_1$ is equal to $\hat\beta_1/SE(\hat\beta_1)$, and so a large (absolute) value of the z-statistic indicates evidence against the null $\beta_0$  hypothesis $H_0: \beta = 0$.
+
+Making Predictions
+========================================================
+- Once the coefficients have been estimated, it is a simple matter to compute the probability of the response variable for any given given predictor.
+
+- To compute the probability of $Y$ when a predictors is qualitative the dummy variable approach is valid.
+
+Multiple Logistic Regression
+========================================================
+
+- As multiple linear regression, the logit model can be expanded to more than one predictor which can be useful to improve prediction or estimation via controlling for possible confounders or including interactions.
+
+- there are dangers and subtleties associated with performing regressions involving only a single predictor when other predictors may also be relevant.
+
+Multiple-class classification
+========================================================
+- Logistic Regression can be useful to model response varible with more than two classes.  Nevertheless,
+
+- Discriminant Analysis, is popular for multiple-class classification.
+
+Linear Discriminant Analysis
+========================================================
+
+- Logistic Regression estimate the probability by modeling the conditional distribution of the response $Y$, given the predictor(s) $X$.
+
+- Linear Discriminat Analysis model the distribution of the predictors $X$ separately in each of the response classes (i.e. given $Y$), and then use Bayes’ theorem to flip these around into estimates for $Pr(Y = k|X = x)$.
+
+- When these distributions are assumed to be normal, it turns out that the model is very similar in form to logistic regression.
+
+Linear Discriminant Analysis
+========================================================
+Why do we need another method, when we have logistic regression?
+There are several reasons:
+
+- When the classes are well-separated, the parameter estimates for the logistic regression model are surprisingly unstable. Linear discriminant analysis does not suffer from this problem.
+
+- If $n$ is small and the distribution of the predictors $X$ is approximately normal in each of the classes, the linear discriminant model is again more stable than the logistic regression model.
+
+- Linear discriminant analysis is popular when we have more than two response classes.
+
+Using Bayes’ Theorem for Classification
+========================================================
+
+$$Pr(Y = k | X = x) = \frac{\pi_kf_k(x)}{\sum_{l=1}^k \pi_lf_l(x)}$$
+
+- Objective: Classify an observation into one of $k$ classes. In other words, the qualitative response variable $Y$ can take on $K$ possible distinct and unordered values.
+
+- Let $\pi_k$ represent the overall or prior probability that a randomly chosen observation comes from the $k^{th}$ class; this is the probability that a given observation is associated with the $k^{th}$ category of the response variable $Y$.
+
+- Let $f_k(X) \equiv Pr(X = x|Y = k)$ denote the density function of $X$ for an observation that comes from the kth class.
+
+Using Bayes’ Theorem for Classification
+========================================================
+- In other words, $f_k(X)$ is relatively large if there is a high probability that an observation in the $k^{th}$ class has $X \approx x$, and $f_k(X)$ is small if it is very unlikely that an observation in the $k^{th}$ class has $X \approx x$.
+
+- The Bayes classifier involves assigning an observation X = x to the class for which is largest.
+
+- Error rates of the LDA can tell how weel perform with a particular data set.
+
+Using Bayes’ Theorem for Classification
+========================================================
+
+- The LDA classifier results from assuming that the observations within each class come from a normal distribution with a class-specific mean vector and a common variance $\sigma^2$ , and plugging estimates for these parameters into the Bayes classifier.
+
+LDA for p > 1
+========================================================
+
+- Need to be assume that $X = (X_1 , X_2 , . . . , X_p )$ is drawn from a multivariate Gaussian (or multivariate normal) distribution, with a class-specific mean vector and a common covariance matrix.
+
+- The multivariate Gaussian distribution assumes that each individual predictor follows a one-dimensional normal distribution with some correlation between each pair of predictors.
+
+- The height of the surface, of the multivariate Gaussian distribution at any particular point represents the probability that both $X_1$ and $X_2$ fall in a small region around that point.
+
+- The surface has a bell shape if $Var(X_1) = Var(X_2)$ and  $Cor(X_1 , X_2) = 0$
+
+LDA for p > 1
+========================================================
+
+- The bell shape will be distorted if the predictors are correlated or have unequal
+variances. In this situation, the base of the bell will have an elliptical, rather than circular shape.
+
+- To indicate that a p-dimensional random variable X has a multivariate Gaussian distribution, we write $X \sim N (\mu, \Sigma)$. Go to page 143 formula details.
+
+- Test error rates give an idea of how well perform the classifier.
+
+- A confusion matrix can show the two types of errors that a binary classifier can make. It can incorrectly assign an individual to a category, or it can incorrectly assign an individual who does not default to the default category. **verificar** It is often of interest to determine which of these two types of errors are being made.
+
+Performance of the classifier
+========================================================
+- Class-specific performance, sensitivity and specificity, characterize the performance of a classifier or screening test. 
+
+	- Sensitivity is the percentage of true defaulters that are identified
+	- Specificity is the percentage of non-defaulters that are correctly identified
+	
+- The ROC (receiver operating characteristics) curve is a popular graphic for simultaneously displaying the two types of errors for all possible thresholds.
+
+Chapter 4 needs to be finished
+========================================================
+
+Chapter 5: Resampling Methods
+========================================================
+Resampling methods involve repeatedly drawing samples from a training set and refitting a model of interest on each sample in order to obtain additional information about the fitted model.
+
+- Commonly used resampling methods
+	- Cross-validation: is used to estimate the **test error** associated with a given statistical learning method in order to evaluate its performance, or to select the appropriate **level of flexibility**.
+	- Bootstrap: is most commonly used to provide a **measure of accuracy** of a parameter estimate or of a given statistical learning method.
+
+Resampling Methods
+========================================================
+- Model assessment: The process of evaluating a model’s performance.
+- Model selection:  The process of selecting the proper level of flexibility for a model is known as model selection.
+- Test error: is the average error that results from using a statistical learning method to predict the response on a new observation— that is, a measurement that was not used in training the method.
+- The use of a particular statistical learning method is warranted if it results in a low test error.
+
+Validation
+========================================================
+
+A class of methods that estimate the test error rate by holding out a subset of the training observations from the fitting process, and then applying the statistical learning method to those held out observations.
+
+Cross-Validation
+========================================================
+
+The Bootstrap
+========================================================
+
+- The bootstrap is a widely applicable and extremely powerful statistical tool that can be used to quantify the uncertainty associated with a given estimator or statistical learning method.
+	
+- the power of the bootstrap lies in the fact that it can be easily applied to a wide range of statistical learning methods, including some for which a measure of variability is otherwise difficult to obtain and is not automatically output by statistical software.
+
+- In bootstrap, rather than repeatedly obtaining independent data sets from the population, we instead obtain distinct data sets by repeatedly sampling observations from the original data set.
+
+The Bootstrap:
+========================================================
+- Does not they depend on the unknown parameter $\sigma^2$, the noise variance.
+
+- Does not rely on any of the assumptions of the linear model, and so it is likely giving a more accurate estimate of the standard errors of $\hat\beta_0$ and $\hat\beta_1$
+
+- Rather than repeatedly obtaining independent data sets from the population, we instead obtain distinct data sets by repeatedly sampling observations from the original data set.
+
+Standard Error of the Bootstrap Set
+========================================================
+
+$$SE_B(\hat\alpha) = \sqrt{\frac{1}{B-1}\sum^{B}_{r=1}(\hat\alpha^{*r} - \frac{1}{B}\sum^{B}_{r^{'}=1}\hat\alpha^{*r^{'}})}$$
+
+- This serves as an estimate of the standard error of $\hat\alpha$ estimated form the original data set.
+
+Chapter 6
+========================================================
+
+Linear Model Selection and Regularization
+========================================================
+
+- This chapter explains some ways in which the simple linear model can be improved, by replacing plain least squares fitting with some alternative fitting procedures.
+
+- Alternative fitting procedures can yield better prediction accuracy and model interpretability.
+
+Prediction Accuracy
+========================================================
+- Provided that the true relationship between the response and the predictors is approximately linear, the least squares estimates will have low bias. If $n>>p$ — that is, if $n$, the number of observations, is much larger than $p$, the number of variables — then the least squares estimates tend to also have low variance, and hence will perform well on test observations.
+
+- However, if $n$ is not much larger than $p$, then there can be a lot of variability in the least squares fit, resulting in overfitting and consequently poor predictions on future observations not used in model training. 
+
+Prediction Accuracy
+========================================================
+- If $p > n$, then there is no longer a unique least squares coefficient estimate: **the variance is infinite** so the method cannot be used at all. 
+
+- By constraining or shrinking the estimated coefficients, we can often substantially reduce the variance at the cost of a negligible increase in bias. This can lead to substantial improvements in the accuracy with which we can predict the response for observations not used in model training.
+
+Model Interpretability
+========================================================
+
+- It is often the case that some or many of the variables used in a multiple regression model are in fact not associated with the response. Including such irrelevant variables leads to unnecessary complexity in the resulting model. 
+
+- By removing these variables—that is, by setting the corresponding coefficient estimates to zero — we can obtain a model that is more easily interpreted.
+
+- Least squares is extremely unlikely to yield any coefficient estimates that are exactly zero. 
+
+Alternatives to use Least Square to fit
+========================================================
+- Subset selection: This approach involves identifying a subset of the $p$ predictors that we believe to be related to the response. We then fit a model using least squares on the reduced set of variables.
+
+- Shrinkage: This approach involves fitting a model involving all p predictors. However, the estimated coefficients are shrunken towards zero relative to the least squares estimates. This shrinkage (also known as regularization) has the effect of reducing variance. Depending on what type of shrinkage is performed, some of the coefficients may be estimated to be exactly zero. Hence, shrinkage methods can also perform variable selection.
+
+- Dimession Reduction: This approach involves projecting the $p$ predictors into a M-dimensional subspace, where $M < p$. This is achieved by computing M different linear combinations, or projections, of the variables. Then these $M$ projections are used as predictors to fit a linear regression model by least squares.
+
+Best Subset Selection
+========================================================
+- Fit a separate least squares regression for each possible combination of the p predictors and select the one that is best.
+
+- That is $$(\dfrac{p}{k}) = p(p-1)/2$$
+
+Best Subset Selection Algorithm
+========================================================
+1. Let $M_o$ denote the null model, which contains no predictors. This model simply predicts the sample mean for each observation.
+
+2. for $k = 1,2,...p$:
+	- Fit all $(\frac{p}{k})$ models that contain exactly $k$ predictors.
+	- Pick the best among models, and and call it $M_k$. Here best is defined as having the smalles RSS, or equivalently largest $R^2$.
+
+3. Select a single best model from among $M_o, . . . , M_p$ using crossvalidated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$ .
+
+Best Subset Selection Limitation
+========================================================
+- While best subset selection is a simple and conceptually appealing approach, it suffers from computational limitations. The number of possible models that must be considered grows rapidly as $p$ increases. In general, there are $2^p$ models that involve subsets of $p$ predictors. So if $p = 10$, then there are approximately $1,000$ possible models to be consider.
+
+- Enormous search space can lead to overfitting and high variance of the coefficient estimates.
+
+Forward Stepwise Selection
+========================================================
+- Forward stepwise selection begins with a model containing no predictors, and then adds predictors to the model, one-at-a-time, until all of the predictors are in the model.
+
+Forward Stepwise Selection Algorithm
+========================================================
+1. Let $M_o$ denote the null model, which contains no predictors.
+
+2. For $k = 0, . . . , p − 1$:
+ - Consider all $p − k$ models that augment the predictors in M$_k$ with one additional predictor.
+	- Choose the best among these $p − k$ models, and call it $M_{k+1}$. Here best is defined as having smallest RSS or highest $R^2$ .
+	
+3. Select a single best model from among $M_o , . . . , M_p$ using crossvalidated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$.
+
+Backward Stepwise Selection Algorithm
+========================================================
+1. Let $M_p$ denote the full model, which contains all $p$ predictors.
+
+2. For $k = p, p − 1, . . . , 1$:
+	- Consider all $k$ models that contain all but one of the predictors in $M_k$ , for a total of $k − 1$ predictors.
+	- Choose the best among these $k$ models, and call it $M_{k−1}$. Here best is defined as having smallest RSS or highest $R_2$.
+
+3. Select a single best model from among $M_o , . . . , M_p$ using cross-validated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$.
+
+Remarks Stepwise Selection
+========================================================
+- Stepwise selection, the backward selection approach searches through only $1 + p(p + 1)/2$ models, and so can be applied in settings where p is too large to apply best subset selection.
+
+- Backward selection requires that the number of samples $n$ is larger than the number of variables $p$ (so that the full model can be fit). In contrast, forward stepwise can be used even when $n < p$, and so is the only viable subset method when $p$ is very large.
+
+- The best subset, forward stepwise, and backward stepwise selection approaches generally give similar but not identical models.
+
+Choosing the Optimal Model
+========================================================
+- We wish to choose a model with a low test error. Therefore, RSS and $R_2$ are not suitable for selecting the best model among a collection of models with different numbers of predictors.
+
+- In order to select the best model with respect to test error, we need to estimate this test error and there are two common approaches.
+	- We can indirectly estimate test error by making an adjustment to the training error to account for the bias due to overfitting.
+	- We can directly estimate the test error, using either a validation set approach or a cross-validation approach.
+
+Adjusting the training error
+========================================================
+ - $C_p$, Akaike information criterion, Bayesian information criterion and adjusted $R^2$ are used to compare among models.
+ 
+ Validation and Cross-Validation
+========================================================
+ - These methods can directly estimate the test error and makes fewer assumptions about the true underlying model than the previous mentioned methods.
+ 
+ - They can also be used in a wider range of model selection tasks, even in cases where it is hard to pinpoint the model degrees of freedom (e.g. the number of predictors in the model) or hard to estimate the error variance $\sigma^2$.
+
+One-Standard-Error Rule 
+========================================================
+- If we repeated the validation set approach using a different split of the data into a training set and a validation set, or if we repeated cross-validation using a different set of cross-validation folds, then the precise model with the lowest estimated test error would surely change.
+
+- one-standard-error rule:
+	1. Calculate the standard error of the estimated test MSE for each model size
+	2. select the smallest model for which the estimated test error is within one standard error of the lowest point on the curve.
+	
+Shrinkage Methods
+========================================================
+- This is an alternative method to select predictors
+
+- Fit a model containing all $p$ predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero.
+
+- it turns out that shrinking the coefficient estimates can significantly reduce their variance.
+
+- The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
