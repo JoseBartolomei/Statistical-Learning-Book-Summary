@@ -66,7 +66,7 @@ than is typically needed for a parametric approach) is required in order to obta
 The Trade-Off Between Prediction Accuracy and Model Interpretability
 ========================================================
 
-- Some models are less flixble or restrictive, in the sense that they can produce just a relatively small range of shapes to estimate $f$.
+- Some models are less flexible or restrictive, in the sense that they can produce just a relatively small range of shapes to estimate $f$.
 - Flexible vs non-flexible
 	- interested in inference, then restrictive models are much more interpretable.
 	- If prediction is of interest less interpretable but more flexible and accurate models are useful.
@@ -75,11 +75,11 @@ Supervised Versus Unsupervised Learning
 ========================================================
 - Supervised: For each observation of the predictor measurement(s) $x_i , i = 1, . . . , n$ there is an associated response measurement $y_i$ .
 	- We wish to fit a model that relates the response to the predictors, with the aim of accurately predicting the response for future observations (prediction) or better understanding the relationship between the response and the predictors (inference).
-	- examples: linear or logistic regression, Generalized Additive Model, boosting, support vecto machines.
+	- examples: linear or logistic regression, Generalized Additive Model, boosting, support vector machines.
 
 Supervised Versus Unsupervised Learning
 ========================================================
-- Unsuppervised: For every observation $i = 1, . . . , n$, we observe a vector of measurements $x_i$ but no associated response $y_i$.
+- Unsupervised: For every observation $i = 1, . . . , n$, we observe a vector of measurements $x_i$ but no associated response $y_i$.
 - Lack a response variable that can supervise our analysis.
 - With this analysis is possible to understand the relationship between variables or between the observations.
 	- examples: cluster analysis, clustering
@@ -105,7 +105,7 @@ MSE
 ========================================================
 The MSE will be **small** if the predicted responses are very close to the true responses, and will be **large** if for some of the observations, the predicted and true responses differ substantially.
 
-- we do not really care how well the method works on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unsen test data.
+- we do not really care how well the method works on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unseen test data.
 
 - We want to choose the method that gives the lowest test MSE, as opposed to the lowest training MSE.
 
@@ -119,7 +119,7 @@ MSE
 -  As model flexibility increases, training MSE will decrease, but the test MSE may not.
 
 - This is a fundamental property of statistical learning that holds regardless of the particular data set at hand and regardless of the statistical method being used. 
-- When a given method yields a small training MSE but a large test MSE, we are said to be overfitting the data.
+- When a given method yields a small training MSE but a large test MSE, we are said to be over-fitting the data.
 
 MSE
 ========================================================
@@ -160,11 +160,11 @@ simpler model.
 
 The Bias-Variance Trade-Off: Equation
 ========================================================
-The mentioned can be sumarrized with the following equation
+The mentioned can be summarized with the following equation
 
 $$E(y_0 - \hat{f}(x_0))^2 = Var\hat{f}(x_0) + [Bias\hat{f}(x_0)] + Var(\epsilon)$$
 
-The Classificatin Setting
+The Classification Setting
 ========================================================
 - Many of the concepts that we have encountered, such as the bias-variance trade-off, can be transfer over to the classification setting with only some modifications due to the fact that $y_i$ is no longer numerical.
 
@@ -201,7 +201,7 @@ K-Nearest Neighbors
 
 - As $K$ grows, the method becomes less flexible and produces a decision boundary that is close to linear. This corresponds to a low-variance but high-bias classifier.
 
-The Classificatin Setting
+The Classification Setting
 ========================================================
 
 - Other types of Classification Methods are: Support Vector Machine, forms of Logistic and Linear Regression and Dyscriminant Analysis
@@ -504,7 +504,7 @@ Model Fit
 
 - Two of the most common numerical measures of model fit are the RSE and $R^2$, the fraction of variance explained.
 
-- It turns out that $R^2$ will always increase when more variables are added to the model, even if those variables are only weakly associated with the response. This is due to the fact that adding another variable to the least squares equations must allow us to fit the training data (thoughnot necessarily the testing data) more accurately.
+- It turns out that $R^2$ will always increase when more variables are added to the model, even if those variables are only weakly associated with the response. This is due to the fact that adding another variable to the least squares equations must allow us to fit the training data (though not necessarily the testing data) more accurately.
 
 - Models with more variables can have higher $RSE$ if the decrease in $RSS$ is small relative
 to the increase in $p$.
@@ -532,14 +532,14 @@ Removing the Additive Assumption
 
 - One way of extending the linear model to allow for interaction effects is to include a third predictor, called an interaction term, which is constructed by computing the product of $X_1$ and $X_2$.
 
-Chater 3 incomplete - needs to be finished
+Chapter 3 incomplete - needs to be finished
 ========================================================
 
 Classification
 ========================================================
 - Classification is used when the response variable is qualitative
 
-- Classification: Statistical aspproaches for predicting qualitative responses.
+- Classification: Statistical approaches for predicting qualitative responses.
 
 - Classifying an observation: Predicting a qualitative response for an observation, since it involves assigning the observation to a category, or class.
 
@@ -890,4 +890,120 @@ Lambda
 - When $\lambda = 0$, the penalty term has no effect, and ridge regression will produce the least squares estimates. However, as $\lambda\rightarrow\infty$, the impact of the shrinkage penalty grows, and the ridge regression coefficient estimates will approach zero.
 
 - Ridge regression will produce a different set of coefficient estimates, $\hat\beta^{R}_{\lambda}$, for each value of $\lambda$.
+
+ell 2 norm
+========================================================
+- Can be interpret as the amount that the ridge regression coefficient estimates have been  shrunken towards zero.
+
+- A small value indicates that they have been shrunken very close to zero.
+
+Advantages of Ridge over Least Square
+========================================================
+- Some values of $\lambda$ improve the bias-variance trade-off 
+- As $\lambda$ increases, the flexibility of the ridge regression fit decreases, leading to decreased variance but increased bias.
+- In Least Saquare Regression when the number of variables $p$ is almost as large as the number of observations $n$ the least squares estimates will be extremely variable.
+- If $p > n$, then the least squares estimates do not even have a unique solution, whereas ridge regression can still perform well by trading off a small increase in bias for a large decrease in variance.
+- Ridge regression works best in situations where the least squares estimates have high variance.
+- Ridge regression also has substantial computational advantages over best subset selection.
+
+Ridge Disadvantage
+========================================================
+- Ridge regression will include all $p$ predictors in the final model.
+
+- This may not be a problem for prediction accuracy, but it can create a challenge in model interpretation in settings in which the number of variables $p$ is quite large.
+
+The Lasso
+========================================================
+- The Lasso is an alternative to ridge introducint the ell 1 norm penalty.
+- The ell 1 penalty has the effect of forcing some of the coefficient estimates to be exactly equal to zero when the tuning parameter $λ$ is sufficiently large.
+- Futhermore, Lasso perform variable selection, hence, models generated are generally much easier to interpret.
+
+Lambda in Lasso
+========================================================
+- When $\lambda = 0$, then the lasso simply gives the least squares fit, and when $\lambda$ becomes sufficiently large, the lasso gives the null model in which all coefficient estimates equal zero.
+
+Comparing the Lasso and Ridge Regression
+========================================================
+- Lasso produces simpler and more interpretable models than Ridge because involve only a subset of the predictors.
+- Lasso leads to qualitatively similar behavior to ridge regression, in that as $\lambda$ increases, the variance decreases and the bias increases.
+- Both methods can outperform the other because are dependent on the data and number of $p$.
+
+Comparing the Lasso and Ridge Regression (Cont.)
+========================================================
+- In general, one might expect the lasso to perform better in a setting where a relatively small number of predictors have substantial coefficients, and the remaining predictors have coefficients that are very small or that equal zero. 
+
+- Ridge regression will perform better when the response is a function of many predictors, all with coefficients of roughly equal size. However, the number of predictors that is related to the response is never known a priori for real data sets. 
+
+- A technique such as cross-validation can be used in order to determine which approach is better on a particular data set.
+
+Selecting the Tuning Parameter
+========================================================
+- Cross-Validation to select $\lambda$
+	1. Choose a grid of $\lambda$ values, and compute the cross-validation error for each value of $\lambda$.
+	2. Select the tuning parameter value for which the cross-validation error is smallest.
+	3. Re-fit teh model using all of the available observations and the selected value of the tuning parameter.
+	
+Dimension Redcution Methods (DRM)
+========================================================
+- DRM is an approach that transform the predictors and then fit a least square model using the transformed varaibles.
+
+$$y_i = \theta_0 + \sum^{M}_{m=1}\theta_{m}z_{im} + \epsilon, i = 1, ..., n$$
+
+Where
+$$Z_{m} = \sum^{p}_{j=i}\phi_{jm}X_{j}$$ represents linear combinations of the original predictors
+
+and
+
+$\phi_{jm}, m = 1,...,n$ are constants
+
+DRM Importance
+========================================================
+- This approach reduces the problem of estimating the $p + 1$ coefficients $\beta_0, \beta_1,..., \beta_p$ to the simpler problem of estimating the $M + 1$ coefficients $\theta_0, \theta_1,..., \theta_M$ , where $M < p$. 
+
+- In other words, the dimension of the problem has been reduced from $p + 1$ to $M + 1$.
+
+- Due to its mathematical properties this approach can often outperform least squares regression.
+
+DRM Properties
+========================================================
+- Due to its new formulatin Dimesion Reduction serves to constrain the estimated coefficients which has the potential to bias the estimates.
+
+- However, in situations where the number of predictors ($p$) is large relative to the number of observations ($n$), selecting a value of $M << p$  can significantly reduce the variance of the fitted coefficients. 
+
+- If $M = p$, and all the $Z_m$ are linearly independent, then the estimated reduced coefficients poses no constraints. In this case, no dimension reduction occurs, and so fitting with DRM is equivalent to performing least squares on the original $p$ predictors.
+
+DRM Procedure
+========================================================
+1. the transformed predictors $Z_1, Z_2, ..., Z_M$ are obtained
+2. The model is fit using these $M$ predictors.
+
+- The choice of $Z's$ or equivalently $\phi_{jm}$'s can be achieved in different ways
+	- principal components
+	- partial lest squares
+	- others,....
+
+Principal Components Analysis (PCA)
+========================================================
+- An approach for deriving a low-dimensional set of features from a large set of variables.
+- In other words, a technique for reducing the dimension of a $n × p$ data matrix $X$.
+- The values of the principal component $Z_1$ can be interpreted as single number summaries of the joint of two predictors for each location.
+- If a strong linear relationship between the principal component and the predictors is observed it could suggest that its capture most of the information contained in the predictors.
+
+n PA's
+========================================================
+- Is possible to construct up to $p$ distinct principal components.
+- The second principal component $Z_2$ is a linear combination of the variables that is uncorrelated with $Z_1$, and has largest variance subject to this constraint.
+- A principal component scores that are much closer to zero indicates that this component captures far less information. It can evidenced by a poor corelation.
+
+PCA Approach
+========================================================
+1. Standardize each predictor prior to generate the principal components to ensures that all variables are on the same scale.
+	- In the absence of standardization, the high-variance variables will tend to play a larger role in the principal components obtained, and the scale on which the variables are measured will ultimately have an effect on the final PCR model.
+	- If the variables are all measured in the same units then one might choose not to standardize them.
+1. Construct the first M principal components, $Z_1, ..., Z_M$ , and then using these components as the predictors in a linear regression model that is fit using least squares.
+1. In PCA, the number of principal components, $M$, is typically chosen by cross-validation.
+
+
+Consideration in High Dimensions
+========================================================
 
