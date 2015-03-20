@@ -1,0 +1,183 @@
+Introduction to Statistical Learning Book Summary: Chapter 7
+========================================================
+author: 
+date: 
+
+Chapter 7. Moving Beyond Linearity
+========================================================
+
+Chapter 7. Moving Beyond Linearity
+========================================================
+- Models can be expanded to take into accoutn non-linearity while maintaining, as possible, the interprtability of a linear model.
+- Thechniques to model non-linearity are: polynomical regression, step functions, regression spline, smoothing spline, local regression and generalized additive models.
+- The polynomial regression can lead to high variance estimators and the step fucntions can take the form of non-natural or non-adecuate cut points.
+- In this summary will not be cover polynomial and step function regression.
+
+Regression Splines: Piecewise Polynomials
+========================================================
+- Piecewise polynomial regression involves fitting separate low-degree polynomials over different regions of $X$.
+- For example, a piecewise cubic polynomial works by fitting a cubic regression model $n$ to different parts of the range of $X$.
+- The points where the coefficients change are called knots.
+- In general, if we place $K$ different knots throughout the range of $X$, then we will end up fitting $K + 1$ different cubic polynomials.
+- The problem with this methods is that the result of the model function is discontinuous.
+
+Picewise formulation with one knots
+========================================================
+- One knots two different polynomials.  In this examples is a cubic polynomial.
+
+\[y_i(x) = \left\{
+  \begin{array}{lr}
+   \beta_{01} + \beta_{11}x_{i} + \beta_{21}x^{2}_{i} + \beta_{31}x^{3}_{i} + \epsilon_i & if & x_i < c\\
+    \beta_{02} + \beta_{12}x_{i} + \beta_{22}x^{2}_{i} + \beta_{32}x^{3}_{i} + \epsilon_i & if & x_i \ge c
+  \end{array}
+  \right.
+\]
+  
+ - Using more knots leads to a more flexible piecewise polynomial.
+ 
+Constraints and Splines
+========================================================
+- To avoid jumps or un-smoothed lines in the nonlinear functions are applied some constraints such as continuity, continuity of the first derivative, and continuity of the second derivative.
+- Each constraint that are impose on the piecewise cubic polynomials effectively frees up one degree of freedom, by reducing the complexity of the resulting piecewise polynomial fit.
+
+Choosing the Number and Locations of the Knots
+========================================================
+- The regression spline is most flexible in regions that contain a lot of knots, because in those regions the polynomial coefficients can change rapidly.
+- One option is to place more knots in places where we feel the function might vary most rapidly, and to place fewer knots where it seems more stable. 
+- It is common to place knots in a uniform fashion.
+	1. Specify the desired degrees of freedom
+	1. Have the software automatically place the corresponding number of knots at uniform quantiles of the data.
+	
+Choosing the Number and Locations of the Knots
+========================================================
+- How many knots should we use, or degrees of freedom should our spline contain?
+	- Option 1: Try different numbers of knots and see which produces the best looking curve.
+	
+Choosing the Number and Locations of the Knots
+========================================================
+- How many knots should we use, or degrees of freedom should our spline contain?
+	- Option 2: Use cross-validation
+		1. remove a portion of the data
+		1. fit a spline with a certain number of knots to the remaining data
+		1. use the spline to make predictions for the held-out portion.
+		1. repeat this process multiple times until each observation has been left out once, and then compute the overall cross-validated RSS.
+	- This procedure can be repeated for different numbers of knots $K$. Then the value of $K$ giving the smallest RSS is chosen.
+	
+Advantages of splines over polynomial regression
+========================================================
+- Regression splines often give superior results to polynomial regression. This is because splines introduce flexibility by increasing the number of knots but keeping the degree fixed.
+- Generally, this approach produces more stable estimates. 
+- Splines also allow us to place more knots, and hence flexibility, over regions where the function $f$ seems to be changing rapidly, and fewer knots where $f$ appears more stable.
+
+Disadvantages of splines
+========================================================
+- Splines can have high variance at the outer range of the predictors—that is, when $X$ takes on either a very small or very large value.
+
+- Futhermore, other spline function (ex. natural spline, cubic splines) has been develop with constrains to provide more stable estimates.
+
+Choosing Locations of the Knots
+========================================================
+- Options:
+	- place more knots in places where we feel the function might vary most rapidly, and to place fewer knots where it seems more stable.
+	- Place knots in a uniform fashion by specifying the desired degrees of freedom, and then have the software automatically place the corresponding number of knots at uniform quantiles of the data.
+	
+Choosing the Number of Knots
+========================================================
+- Options:
+	- Try out different numbers of knots and see which produces the best looking curve. 
+	-  Use cross-validation
+		1. remove a portion of the data (say 10 %)
+		2. fit a spline with a certain number of knots to the remaining data
+		3. use the spline to make predictions for the held-out portion. 
+		4. repeat this process multiple times until each observation has been left out once
+		5. compute the overall cross-validated RSS. 
+
+Choosing the Number of Knots
+========================================================
+- This procedure can be repeated for different numbers of knots $K$. Then the value of $K$ giving the smallest RSS is chosen.
+
+Other splines
+========================================================
+- The book contains other modalities of splines such as the smoothing spline
+
+- Degrees of freedom refer to the number of free parameters, such as the number of coefficients fit in a polynomial or cubic spline.
+
+Local Regression
+========================================================
+- Local regression is a different approach for fitting flexible non-linear functions, which involves computing the fit at a target point $x_0$ using only the nearby training observations.
+
+- Local regression is sometimes referred to as a memory-based procedure, because like nearest-neighbors, we need all the training data each time we wish to compute a prediction.
+
+Perform Local Regression
+========================================================
+- In order to perform local regression, there are a number of choices to be made, such as how to define the weighting function $K$, and whether to fit a linear, constant, or quadratic regression and the span.
+
+- The span is the most important choice which has the role of a tunung paramenter controlling the flexibility of the non-linear fit.
+
+- The smaller the value of $s$, the more local and wiggly will be our fit.
+
+- A very large value of $s$ will lead to a global fit to the data using all of the training observations.
+
+- Cross-validation can be use to to choose $s$, or we can specify it directly.
+
+Use of Local Regression
+========================================================
+- One very useful generalization involves fitting a multiple linear regression model that is global in some variables, but local in another, such as time. 
+	- Such varying coefficient models are a useful way of adapting a model to the most recently gathered data.
+- Local regression also generalizes very naturally when we want to fit models that are local in a pair of variables $X_1$ and $X_2$ , rather than one.
+
+- Local regression can perform poorly if $p$ is much larger than about 3 or 4 because there will generally be very few training observations close to $x_0$.
+
+Algorithm to Local Regression at X = x_0
+========================================================
+1. Gather the fraction $s = k/n$ of training points whose $x_i$ are closest to $x_0$.
+2. Assign a weight $K_{i0} = K(x_i, x_0)$ to each point in this neighborhood, so that the point furthest from $x_0$ has weight zero, and the closest has the highest weight. All but these $k$ nearest neighbors get weight zero.
+3. Fit a weighted least squares regression of the $y_i$ on the $x_i$ using the aforementioned weights, by finding $\hat\beta_0$ and $\hat\beta_1$ that minimize 
+
+$$\sum^{n}_{i=1} K_{i0} (y_i - \beta_0 - \beta_1x_i)^2$$.
+
+4. The fitted value at $x_0$ is given by $\hat{f}(x_0) = \hat\beta_0 + \hat\beta_{1}x_0$.
+
+Generalized Additive Models (GAM)
+========================================================
+- GAM extend the use of thecniques to fit non-linaer realtaionship to a regression model with more than one predictors.
+
+- Generalized additive models (GAMs) provide a general framework for extending a standard linear model by allowing non-linear functions of each of the variables, while maintaining additivity.
+
+- GAMs can be applied with both quantitative and qualitative responses.
+
+GAM for Regression Problems
+========================================================
+- A natural way to extend the multiple linear regression model in order to allow for non-linear relationships between each feature and the response is to replace each linear component $\beta_jx_{ij}$ with a (smooth) non-linear function $f_j(x_{ij})$. We would then write the model as:
+
+\[y_i(x) =
+  \begin{array}{lr}
+   \beta_0 + \sum^{p}_{j=1}f_j(x_{ij}) + \epsilon_i \\
+    \beta_{0} + f_1(x_{i1})+ f_2(x_{i2}) + ... + f_p(x_{ip}) + \epsilon_i
+  \end{array}
+\]
+
+- It is called an additive model because separate $f_j$ for each $X_j$ are calculated and then add together all of their contributions.
+- This method fits a model involving multiple predictors by repeatedly updating the fit for each predictor in turn, holding the others fixed.
+
+Pros and Cons of GAMs
+========================================================
+- Pro: GAMs allow us to fit a non-linear $f_j$ to each $X_j$, so that we can automatically model non-linear relationships that standard linear regression will miss. This means that we do not need to manually try out many different transformations on each variable individually.
+
+- Pro: The non-linear fits can potentially make more accurate predictions for the response $Y$.
+
+- Pro: Because the model is additive, we can still examine the effect of each $X_j$ on $Y$ individually while holding all of the other variables fixed. Hence if we are interested in inference, GAMs provide a useful representation.
+
+Pros and Cons of GAMs
+========================================================
+
+- Pro: The smoothness of the function $f_j$ for the variable $X_j$ can be summarized via degrees of freedom.
+
+- Con: The main limitation of GAMs is that the model is restricted to be additive. However, as with linear regression, we can manually add interaction terms to the GAM model by including additional predictors of the
+form $X_j × X_k$.
+
+GAMs for Classification Problems
+========================================================
+- GAMs can also be used in situations where Y is qualitative.
+
+$$log\left(\frac{p(X)}{1-p(X)}\right) = \beta_{0} + f_1(x_{i1})+ f_2(x_{i2}) + ... + f_p(x_{ip})$$
