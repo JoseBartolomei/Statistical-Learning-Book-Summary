@@ -1125,10 +1125,12 @@ Perform Local Regression
 ========================================================
 - In order to perform local regression, there are a number of choices to be made, such as how to define the weighting function $K$, and whether to fit a linear, constant, or quadratic regression and the span.
 
-- The span is the most important choice which has the role of a tunung paramenter controlling the flexibility of the non-linear fit
+- The span is the most important choice which has the role of a tunung paramenter controlling the flexibility of the non-linear fit.
 
-- The smaller the value of $s$, the more local and wiggly will be our fit
-- A very large value of $s$ will lead to a global fit to the data using all of the training observations. 
+- The smaller the value of $s$, the more local and wiggly will be our fit.
+
+- A very large value of $s$ will lead to a global fit to the data using all of the training observations.
+
 - Cross-validation can be use to to choose $s$, or we can specify it directly.
 
 Use of Local Regression
@@ -1145,6 +1147,33 @@ Algorithm to Local Regression at X = x_0
 2. Assign a weight $K_{i0} = K(x_i, x_0)$ to each point in this neighborhood, so that the point furthest from $x_0$ has weight zero, and the closest has the highest weight. All but these $k$ nearest neighbors get weight zero.
 3. Fit a weighted least squares regression of the $y_i$ on the $x_i$ using the aforementioned weights, by finding $\hat\beta_0$ and $\hat\beta_1$ that minimize 
 
-$$\sum^{n}_{i=1} K_{i0} (y_i - \beta_0 - \beta_1x_i)^2$$
+$$\sum^{n}_{i=1} K_{i0} (y_i - \beta_0 - \beta_1x_i)^2$$.
 
 4. The fitted value at $x_0$ is given by $\hat{f}(x_0) = \hat\beta_0 + \hat\beta_{1}x_0$.
+
+Generalized Additive Models (GAM)
+========================================================
+- GAM extend the use of thecniques to fit non-linaer realtaionship to a regression model with more than one predictors.
+
+- Generalized additive models (GAMs) provide a general framework for extending a standard linear model by allowing non-linear functions of each of the variables, while maintaining additivity.
+
+- GAMs can be applied with both quantitative and qualitative responses.
+
+GAM for Regression Problems
+========================================================
+- A natural way to extend the multiple linear regression model in order to allow for non-linear relationships between each feature and the response is to replace each linear component $\beta_jx_{ij}$ with a (smooth) non-linear function $f_j(x_{ij})$. We would then write the model as:
+
+\[y_i(x) =
+  \begin{array}{lr}
+   \beta_{01} + \beta_{11}x_{i} + \beta_{21}x^{2}_{i} + \beta_{31}x^{3}_{i} + \epsilon_i & if & x_i < c\\
+    \beta_{02} + \beta_{12}x_{i} + \beta_{22}x^{2}_{i} + \beta_{32}x^{3}_{i} + \epsilon_i & if & x_i \ge c
+  \end{array}
+\]
+
+\[y_i(x) =
+  \begin{array}{lr}
+   y_i = \beta_0 + \sum^{p}_{j=1}f_j(x_{ij}) + \epsilon_i
+    \beta_{0} + f_1(x_{i1})+ f_2(x_{i2}) + ... + f_p(x_{ip}) + \epsilon_i
+  \end{array}
+  
+\]

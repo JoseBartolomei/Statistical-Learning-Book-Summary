@@ -1,0 +1,270 @@
+Introduction to Statistical Learning Book Summary: Chapter 6
+========================================================
+author: 
+date: 
+
+Chapter 6
+========================================================
+
+Linear Model Selection and Regularization
+========================================================
+
+- This chapter explains some ways in which the simple linear model can be improved, by replacing plain least squares fitting with some alternative fitting procedures.
+
+- Alternative fitting procedures can yield better prediction accuracy and model interpretability.
+
+Prediction Accuracy
+========================================================
+- Provided that the true relationship between the response and the predictors is approximately linear, the least squares estimates will have low bias. If $n>>p$ — that is, if $n$, the number of observations, is much larger than $p$, the number of variables — then the least squares estimates tend to also have low variance, and hence will perform well on test observations.
+
+- However, if $n$ is not much larger than $p$, then there can be a lot of variability in the least squares fit, resulting in overfitting and consequently poor predictions on future observations not used in model training. 
+
+Prediction Accuracy
+========================================================
+- If $p > n$, then there is no longer a unique least squares coefficient estimate: **the variance is infinite** so the method cannot be used at all. 
+
+- By constraining or shrinking the estimated coefficients, we can often substantially reduce the variance at the cost of a negligible increase in bias. This can lead to substantial improvements in the accuracy with which we can predict the response for observations not used in model training.
+
+Model Interpretability
+========================================================
+
+- It is often the case that some or many of the variables used in a multiple regression model are in fact not associated with the response. Including such irrelevant variables leads to unnecessary complexity in the resulting model. 
+
+- By removing these variables—that is, by setting the corresponding coefficient estimates to zero — we can obtain a model that is more easily interpreted.
+
+- Least squares is extremely unlikely to yield any coefficient estimates that are exactly zero. 
+
+Alternatives to use Least Square to fit
+========================================================
+- Subset selection: This approach involves identifying a subset of the $p$ predictors that we believe to be related to the response. We then fit a model using least squares on the reduced set of variables.
+
+- Shrinkage: This approach involves fitting a model involving all p predictors. However, the estimated coefficients are shrunken towards zero relative to the least squares estimates. This shrinkage (also known as regularization) has the effect of reducing variance. Depending on what type of shrinkage is performed, some of the coefficients may be estimated to be exactly zero. Hence, shrinkage methods can also perform variable selection.
+
+- Dimession Reduction: This approach involves projecting the $p$ predictors into a M-dimensional subspace, where $M < p$. This is achieved by computing M different linear combinations, or projections, of the variables. Then these $M$ projections are used as predictors to fit a linear regression model by least squares.
+
+Best Subset Selection
+========================================================
+- Fit a separate least squares regression for each possible combination of the p predictors and select the one that is best.
+
+- That is $$(\dfrac{p}{k}) = p(p-1)/2$$
+
+Best Subset Selection Algorithm
+========================================================
+1. Let $M_o$ denote the null model, which contains no predictors. This model simply predicts the sample mean for each observation.
+
+2. for $k = 1,2,...p$:
+	- Fit all $(\frac{p}{k})$ models that contain exactly $k$ predictors.
+	- Pick the best among models, and and call it $M_k$. Here best is defined as having the smalles RSS, or equivalently largest $R^2$.
+
+3. Select a single best model from among $M_o, . . . , M_p$ using crossvalidated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$ .
+
+Best Subset Selection Limitation
+========================================================
+- While best subset selection is a simple and conceptually appealing approach, it suffers from computational limitations. The number of possible models that must be considered grows rapidly as $p$ increases. In general, there are $2^p$ models that involve subsets of $p$ predictors. So if $p = 10$, then there are approximately $1,000$ possible models to be consider.
+
+- Enormous search space can lead to overfitting and high variance of the coefficient estimates.
+
+Forward Stepwise Selection
+========================================================
+- Forward stepwise selection begins with a model containing no predictors, and then adds predictors to the model, one-at-a-time, until all of the predictors are in the model.
+
+Forward Stepwise Selection Algorithm
+========================================================
+1. Let $M_o$ denote the null model, which contains no predictors.
+
+2. For $k = 0, . . . , p − 1$:
+ - Consider all $p − k$ models that augment the predictors in M$_k$ with one additional predictor.
+	- Choose the best among these $p − k$ models, and call it $M_{k+1}$. Here best is defined as having smallest RSS or highest $R^2$ .
+	
+3. Select a single best model from among $M_o , . . . , M_p$ using crossvalidated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$.
+
+Backward Stepwise Selection Algorithm
+========================================================
+1. Let $M_p$ denote the full model, which contains all $p$ predictors.
+
+2. For $k = p, p − 1, . . . , 1$:
+	- Consider all $k$ models that contain all but one of the predictors in $M_k$ , for a total of $k − 1$ predictors.
+	- Choose the best among these $k$ models, and call it $M_{k−1}$. Here best is defined as having smallest RSS or highest $R_2$.
+
+3. Select a single best model from among $M_o , . . . , M_p$ using cross-validated prediction error, $C_p$ (AIC), BIC, or adjusted $R^2$.
+
+Remarks Stepwise Selection
+========================================================
+- Stepwise selection, the backward selection approach searches through only $1 + p(p + 1)/2$ models, and so can be applied in settings where p is too large to apply best subset selection.
+
+- Backward selection requires that the number of samples $n$ is larger than the number of variables $p$ (so that the full model can be fit). In contrast, forward stepwise can be used even when $n < p$, and so is the only viable subset method when $p$ is very large.
+
+- The best subset, forward stepwise, and backward stepwise selection approaches generally give similar but not identical models.
+
+Choosing the Optimal Model
+========================================================
+- We wish to choose a model with a low test error. Therefore, RSS and $R_2$ are not suitable for selecting the best model among a collection of models with different numbers of predictors.
+
+- In order to select the best model with respect to test error, we need to estimate this test error and there are two common approaches.
+	- We can indirectly estimate test error by making an adjustment to the training error to account for the bias due to overfitting.
+	- We can directly estimate the test error, using either a validation set approach or a cross-validation approach.
+
+Adjusting the training error
+========================================================
+ - $C_p$, Akaike information criterion, Bayesian information criterion and adjusted $R^2$ are used to compare among models.
+ 
+ Validation and Cross-Validation
+========================================================
+ - These methods can directly estimate the test error and makes fewer assumptions about the true underlying model than the previous mentioned methods.
+ 
+ - They can also be used in a wider range of model selection tasks, even in cases where it is hard to pinpoint the model degrees of freedom (e.g. the number of predictors in the model) or hard to estimate the error variance $\sigma^2$.
+
+One-Standard-Error Rule 
+========================================================
+- If we repeated the validation set approach using a different split of the data into a training set and a validation set, or if we repeated cross-validation using a different set of cross-validation folds, then the precise model with the lowest estimated test error would surely change.
+
+- one-standard-error rule:
+	1. Calculate the standard error of the estimated test MSE for each model size
+	2. select the smallest model for which the estimated test error is within one standard error of the lowest point on the curve.
+	
+Shrinkage Methods
+========================================================
+- This is an alternative method to select predictors
+
+- Fit a model containing all $p$ predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero.
+
+- it turns out that shrinking the coefficient estimates can significantly reduce their variance.
+
+- The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
+
+Ridge Regression
+========================================================
+- Ridge regression is very similar to least squares, except that the coefficients
+are estimated by minimizing a slightly different quantity.
+
+$$Ridge = RSS + \lambda\sum^{p}_{j=1}\beta^{2}_{j}$$
+
+- $\lambda$ is a tunning parameter
+
+Ridge Regression
+========================================================
+- As with least squares, ridge regression seeks coefficient estimates that fit the data well, by making the RSS small. However, the second term called a shrinkage penalty, is small when $\beta_1, . . . , \beta_p$ are close to zero, and so it has the effect of shrinking the estimates of $\beta_j$ towards zero.
+
+- The tuning parameter $\lambda$ serves to control the relative impact of these two terms on the regression coefficient estimates.
+
+Lambda
+========================================================
+- When $\lambda = 0$, the penalty term has no effect, and ridge regression will produce the least squares estimates. However, as $\lambda\rightarrow\infty$, the impact of the shrinkage penalty grows, and the ridge regression coefficient estimates will approach zero.
+
+- Ridge regression will produce a different set of coefficient estimates, $\hat\beta^{R}_{\lambda}$, for each value of $\lambda$.
+
+ell 2 norm
+========================================================
+- Can be interpret as the amount that the ridge regression coefficient estimates have been  shrunken towards zero.
+
+- A small value indicates that they have been shrunken very close to zero.
+
+Advantages of Ridge over Least Square
+========================================================
+- Some values of $\lambda$ improve the bias-variance trade-off 
+- As $\lambda$ increases, the flexibility of the ridge regression fit decreases, leading to decreased variance but increased bias.
+- In Least Saquare Regression when the number of variables $p$ is almost as large as the number of observations $n$ the least squares estimates will be extremely variable.
+- If $p > n$, then the least squares estimates do not even have a unique solution, whereas ridge regression can still perform well by trading off a small increase in bias for a large decrease in variance.
+- Ridge regression works best in situations where the least squares estimates have high variance.
+- Ridge regression also has substantial computational advantages over best subset selection.
+
+Ridge Disadvantage
+========================================================
+- Ridge regression will include all $p$ predictors in the final model.
+
+- This may not be a problem for prediction accuracy, but it can create a challenge in model interpretation in settings in which the number of variables $p$ is quite large.
+
+The Lasso
+========================================================
+- The Lasso is an alternative to ridge introducint the ell 1 norm penalty.
+- The ell 1 penalty has the effect of forcing some of the coefficient estimates to be exactly equal to zero when the tuning parameter $λ$ is sufficiently large.
+- Futhermore, Lasso perform variable selection, hence, models generated are generally much easier to interpret.
+
+Lambda in Lasso
+========================================================
+- When $\lambda = 0$, then the lasso simply gives the least squares fit, and when $\lambda$ becomes sufficiently large, the lasso gives the null model in which all coefficient estimates equal zero.
+
+Comparing the Lasso and Ridge Regression
+========================================================
+- Lasso produces simpler and more interpretable models than Ridge because involve only a subset of the predictors.
+- Lasso leads to qualitatively similar behavior to ridge regression, in that as $\lambda$ increases, the variance decreases and the bias increases.
+- Both methods can outperform the other because are dependent on the data and number of $p$.
+
+Comparing the Lasso and Ridge Regression (Cont.)
+========================================================
+- In general, one might expect the lasso to perform better in a setting where a relatively small number of predictors have substantial coefficients, and the remaining predictors have coefficients that are very small or that equal zero. 
+
+- Ridge regression will perform better when the response is a function of many predictors, all with coefficients of roughly equal size. However, the number of predictors that is related to the response is never known a priori for real data sets. 
+
+- A technique such as cross-validation can be used in order to determine which approach is better on a particular data set.
+
+Selecting the Tuning Parameter
+========================================================
+- Cross-Validation to select $\lambda$
+	1. Choose a grid of $\lambda$ values, and compute the cross-validation error for each value of $\lambda$.
+	2. Select the tuning parameter value for which the cross-validation error is smallest.
+	3. Re-fit teh model using all of the available observations and the selected value of the tuning parameter.
+	
+Dimension Redcution Methods (DRM)
+========================================================
+- DRM is an approach that transform the predictors and then fit a least square model using the transformed varaibles.
+
+$$y_i = \theta_0 + \sum^{M}_{m=1}\theta_{m}z_{im} + \epsilon, i = 1, ..., n$$
+
+Where
+$$Z_{m} = \sum^{p}_{j=i}\phi_{jm}X_{j}$$ represents linear combinations of the original predictors
+
+and
+
+$\phi_{jm}, m = 1,...,n$ are constants
+
+DRM Importance
+========================================================
+- This approach reduces the problem of estimating the $p + 1$ coefficients $\beta_0, \beta_1,..., \beta_p$ to the simpler problem of estimating the $M + 1$ coefficients $\theta_0, \theta_1,..., \theta_M$ , where $M < p$. 
+
+- In other words, the dimension of the problem has been reduced from $p + 1$ to $M + 1$.
+
+- Due to its mathematical properties this approach can often outperform least squares regression.
+
+DRM Properties
+========================================================
+- Due to its new formulatin Dimesion Reduction serves to constrain the estimated coefficients which has the potential to bias the estimates.
+
+- However, in situations where the number of predictors ($p$) is large relative to the number of observations ($n$), selecting a value of $M << p$  can significantly reduce the variance of the fitted coefficients. 
+
+- If $M = p$, and all the $Z_m$ are linearly independent, then the estimated reduced coefficients poses no constraints. In this case, no dimension reduction occurs, and so fitting with DRM is equivalent to performing least squares on the original $p$ predictors.
+
+DRM Procedure
+========================================================
+1. the transformed predictors $Z_1, Z_2, ..., Z_M$ are obtained
+2. The model is fit using these $M$ predictors.
+
+- The choice of $Z's$ or equivalently $\phi_{jm}$'s can be achieved in different ways
+	- principal components
+	- partial lest squares
+	- others,....
+
+Principal Components Analysis (PCA)
+========================================================
+- An approach for deriving a low-dimensional set of features from a large set of variables.
+- In other words, a technique for reducing the dimension of a $n × p$ data matrix $X$.
+- The values of the principal component $Z_1$ can be interpreted as single number summaries of the joint of two predictors for each location.
+- If a strong linear relationship between the principal component and the predictors is observed it could suggest that its capture most of the information contained in the predictors.
+
+n PA's
+========================================================
+- Is possible to construct up to $p$ distinct principal components.
+- The second principal component $Z_2$ is a linear combination of the variables that is uncorrelated with $Z_1$, and has largest variance subject to this constraint.
+- A principal component scores that are much closer to zero indicates that this component captures far less information. It can evidenced by a poor corelation.
+
+PCA Approach
+========================================================
+1. Standardize each predictor prior to generate the principal components to ensures that all variables are on the same scale.
+	- In the absence of standardization, the high-variance variables will tend to play a larger role in the principal components obtained, and the scale on which the variables are measured will ultimately have an effect on the final PCR model.
+	- If the variables are all measured in the same units then one might choose not to standardize them.
+1. Construct the first M principal components, $Z_1, ..., Z_M$ , and then using these components as the predictors in a linear regression model that is fit using least squares.
+1. In PCA, the number of principal components, $M$, is typically chosen by cross-validation.
+
+
+Consideration in High Dimensions
+========================================================
