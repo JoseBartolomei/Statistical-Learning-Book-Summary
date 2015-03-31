@@ -1,4 +1,4 @@
-Chp9: Support Vector Machines (SVM)
+Chap 9: Support Vector Machines (SVM)
 ========================================================
 author: 
 date: 
@@ -9,7 +9,7 @@ SVM
 - An approach for classification.
 - Considered one of the best “out of the box” classifiers.
 - Support vector machines are intended for the binary classification setting in which there are two classes.
-- There are extension for more thant two classes.
+- There are extension for more than two classes.
 - There are more similarities between SVM and logistic regression
-- Logistic regression provide probabilites and 
-_ I'll skip, for now, this chapter
+- Logistic regression provide probabilities and 
+- I'll skip, for now, this chapter
