@@ -166,3 +166,47 @@ Random Forest (RF)
 - RF decorrelate the tress by considereing only a subset of predictors.
 	- On average $(p − m)/p$ of the splits will not consider the strong predictor, and so other predictors will have more of a chance.
 	- Using a small value of $m$ in building a random forest will typically be helpful when we have a large number of correlated predictors.
+
+Boosting
+========================================================
+- Another approach for improving the predictions resulting from a decision tree.
+- In boosting, the trees are grown sequentially,
+	- each tree is grown using information from previously grown trees.
+	- does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.
+	
+Boosting Algorithm
+========================================================
+1. Set $\hat{f}(x) = 0$ and $r_i = y_i$ for all $i$ in the training set.
+
+1. For $b = 1,2,...,B$	repeat:
+
+- Fit a tree $\hat{f}^b$ with $d$ splits ($d+1$ terminal nodes) to the training data $(X,r)$.
+
+- Upadate $\hat{f}$ by adding in a shrunken version of the new tree:
+	$$\hat{f}(x) \leftarrow \hat{f}(x)  = \lambda\hat{f}^{b}(x_i).$$
+	
+- Update the residuals,
+$$r_i \leftarrow r_i - \lambda\hat{f}^{b}(x).$$
+
+3. Output the boosted model,
+$$\hat{f}(x) = \sum^{B}_{b=1}\lambda\hat{f}^{b}(x).$$
+
+Boosting Algorithm
+========================================================
+- Boosting fit a decision tree to the residuals from the model.
+- Then add this new decision tree into the fitted function in order to update the residuals.
+- Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter d in the algorithm. 
+- By fitting small trees to the residuals, we slowly improve $\hat{f}$ in areas where it
+does not perform well.
+
+In general, statistical learning approaches that learn slowly tend to perform well.
+
+Boosting Tuning Paramenters
+========================================================
+1. The number of trees $B$. Unlike bagging and random forests, boosting can overfit if $B$ is too large, although this overfitting tends to occur slowly if at all. We use cross-validation to select $B$.
+
+2. The shrinkage parameter $\lambda$, a small positive number. This controls the rate at which boosting learns. Typical values are 0.01 or 0.001, and the right choice can depend on the problem. Very small $\lambda$ can require using a very large value of $B$ in order to achieve good performance.
+
+Boosting Tuning Paramenters
+========================================================
+3. The number d of splits in each tree, which controls the complexity of the boosted ensemble. Often d = 1 works well, in which case each tree is a stump, consisting of a single split. In this case, the boosted ensemble is fitting an additive model, since each term involves only asingle variable. More generally d is the interaction depth, and controls the interaction order of the boosted model, since d splits can involve at most d variables.
