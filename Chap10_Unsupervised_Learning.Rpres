@@ -1,0 +1,25 @@
+Chap 10 Unsupervised Learning (UL)
+========================================================
+author: 
+date: 
+
+What is UL?
+========================================================
+
+- Unsupervised learning is a set of statistical tools intended for the setting in which we have only a set of features $X_1, X_2,..., X_p$ measured on $n$ observations.
+- There is no response, $Y$, variable.
+- Furthermore, there is no interest in prediction, because we do not have an associated response variable $Y$. 
+- The goal is to discover interesting things about the measurements on $X_1, X_2,..., X_p.$
+- UL address the following questions:
+	- Is there an informative way to visualize the data? 
+	- Can we discover subgroups among the variables or among the observations?
+- Unsupervised learning is often performed as part of an exploratory data analysis.
+	
+The Challenge of Unsupervised Learning
+========================================================
+- Tends to be more subjective
+- There is no simple goal for the analysis, such as prediction of a response.
+- It can be hard to assess the results obtained from unsupervised learning methods, since there is no universally accepted mechanism for performing cross-validation or validating results on an independent data set.
+
+Principal Components Analysis
+========================================================
