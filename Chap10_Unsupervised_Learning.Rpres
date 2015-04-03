@@ -21,5 +21,41 @@ The Challenge of Unsupervised Learning
 - There is no simple goal for the analysis, such as prediction of a response.
 - It can be hard to assess the results obtained from unsupervised learning methods, since there is no universally accepted mechanism for performing cross-validation or validating results on an independent data set.
 
-Principal Components Analysis
+Principal Components (PC) Analysis
+========================================================
+- Principal components allow us to summarize this set of correlated variables with a smaller number of representative variables that collectively explain most of the variability in the original set.
+
+- PC results are use as predictors in a regression model in place of the original larger set of variables.
+
+- Principal component analysis (PCA) refers to the process by which principal components are computed, and the subsequent use of these components in understanding the data.
+
+- PCA can be used as a data visualization technique. Is a better method to visualize the $n$ observations when $p$ is large.
+
+Principal Components (PC) Analysis
+========================================================
+- PCA help find a low-dimensional representation of the data that captures as much of the information as possible or in other words...
+	- finds a low-dimensional representation of a data set that contains as much as possible of the variation.
+
+The idea behind PCA
+========================================================
+- Each of the $n$ observations lives in p-dimensional space, but not all of these dimensions are equally interesting. 
+- PCA seeks a small number of dimensions that are as interesting as possible.
+	- The concept of interesting is measured by the amount that the observations vary along each dimension. 
+- Each of the dimensions found by PCA is a linear combination of the $p$ features.
+
+How to obtain PCA's
+========================================================
+- The first principal component of a set of features $X_1, X_2, ..., X_p$ is the normalized linear combination of the features hat has the largest variance.
+
+$$Z_1 = \phi_{11}X_1 + \phi_{21}X_2 + ... + \phi_{p1}X_p$$ 
+
+, where
+- normalize = $\sum^{p}_{j=1} \phi^{2}_{j1} = 1$
+- $\phi_{p1}...$ are the loadings of the first principal component.
+
+- The loadings ($\phi$) are set to one because on the contrary could result in an arbitrarily large variance.
+
+- For further mathematical explanation refer to the Element of Statistical Learning book
+
+asdf
 ========================================================
