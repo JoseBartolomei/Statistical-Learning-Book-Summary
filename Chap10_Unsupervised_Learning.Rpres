@@ -55,7 +55,144 @@ $$Z_1 = \phi_{11}X_1 + \phi_{21}X_2 + ... + \phi_{p1}X_p$$
 
 - The loadings ($\phi$) are set to one because on the contrary could result in an arbitrarily large variance.
 
+- The loading vector $\phi_1$ with elements $\phi_{11}, \phi_{21}, ..., \phi_{p1}$ defines a direction in feature space along which the data vary the most.
+
 - For further mathematical explanation refer to the Element of Statistical Learning book
 
-asdf
+Another Interpretation of Principal Components
 ========================================================
+
+- In previous slides was describe the principal component loading vectors as the directions in feature space along which the data vary the most, and the principal component scores as projections along these directions.
+
+- An alternative interpretation for principal components is: principal components provide low-dimensional linear surfaces that are closest to the observations.
+
+- The first principal component loading vector has a very special property: it is the line in p-dimensional space that is closest to the n observations.
+
+Scale Variables
+========================================================
+
+- Variables needs to be scaled before perform PCA because scaling have a substantial effect on the results obtained.
+
+- If we perform PCA on the unscaled variables, then the first principal component loading vector will have a very large loading for the variable with the highest variance.
+
+- Because it is undesirable for the principal components obtained to depend on an arbitrary choice of scaling, is recommended to scale each variable to have standard deviation of one before we perform PCA.
+
+- If variables are measured in the same units then is not necesarry to scale the variables to have standard deviation one before performing PCA.
+
+Proportion of Variance Explained
+========================================================
+
+- How much of the information in a given data set is lost by projecting the observations onto the first few principal components? 
+
+or 
+
+- How much of the variance in the data is not contained in the first few principal components?
+
+Proportion of Variance Explained
+========================================================
+
+- The total variance presented in the data is defined as:
+
+$$\sum^{p}_{j=1}Var(X_j) = \sum^{p}_{j=1}\frac{1}{n}\sum^{n}_{i=1}x^{2}_{ij}$$
+
+- The variance explained by the $m^{th}$ principal componnet is defined as:
+
+$$\frac{1}{n}\sum^{n}_{i=1}z^{2}_{im} = \frac{1}{n}\sum^{n}_{i=1}\Bigg(\sum^{p}_{j=1}\phi_{jm}x_{ij}\Bigg)^2$$
+
+Proportion of Variance Explained
+========================================================
+
+- Therefore, teh PVE of the $m^{th}$ principal componet is given by:
+
+$$\frac{\sum^{n}_{i=1}\big(\sum^{p}_{j=1}\phi_{jm}x_{ij})^2}{\sum^{p}_{j=1}\sum^{n}_{i=1}x^{2}_{ij}}$$
+
+- The PVE of each principal component is a positive quantity.
+
+- In total, there are $min(n − 1, p)$ principal components, and their PVEs sum to one.
+
+- A scree plot is use to visualize the PVE.
+
+Deciding How Many Principal Components to Use
+========================================================
+
+- The ideal is to use the smallest number of principal components required to get a good understanding of the data.
+
+- Typically, decide on the number of principal components required to visualize the data by examining a scree plot.
+	- By eyeballing the scree plot, look for a point at which the proportion of variance explained by each subsequent principal component drops off.
+	
+	- Ussually if no interesting patterns are found in the first few principal components, then further principal components are unlikely to be of interest.
+	
+Deciding How Many Principal Components to Use on Supervise Learning
+========================================================
+
+- The number of principal component score vectors can be used in the regression as a tuning parameter to be selected via cross-validation or a related approach.
+
+Clustering Methods
+========================================================
+- Clustering refers to a very broad set of techniques for finding subgroups, or clusters, in a data set.
+	- The method seek to partition the data into distinct groups so that the observations within each group are quite similar to each other, while observations in different groups are quite different from each other.
+
+- Clustering vs PCA
+	- PCA looks to find a low-dimensional representation of the observations that explain a good fraction of the variance.
+	- Clustering looks to find homogeneous subgroups among the observations.
+	
+Type of Clustering Methods
+========================================================
+- There are many type of methods. The two specified in the book are k-mean clustering and hierarchical cluseterint
+	- K-means clustering: The mathematical algorithm seek to partition the observations into a pre-specified clustering number of clusters.
+	- Hierarchical clustering: In this algorithm is not know in advance how many clusters will be obtain. The result of the procdure is a tree-like visual representation of the observations, called a dendrogram, q visual represesntation that allows a view of the clusterings obtained for each possible number of clusters, from $1$ to $n$.
+	
+k-Means Clustering
+========================================================
+- K-means clustering is an approach for partitioning a data set into $K$ distinct, non-overlapping clusters.
+- To perform K-means clustering:
+	- first, specify the desired number of clusters $K$
+	- second, then the K-means algorithm will assign each observation to exactly one of the $K$.
+	
+k-Means Clustering thoretical procedure
+========================================================
+- Notation: $C_1,...,C_K$ denote sets containing the indices of the observations in each cluster. These sets satisfy two properties:
+
+1. $C_1 \cup C_2 \cup ... \cup C_K = \{1,...,n\}$
+
+	- Each observation belongs to at least one of the $K$ clusters.
+
+2. $C_k \cap C_{k'} = \emptyset$ for all $K \neq K'$ 
+
+	- The clusters are non-overlapping: no observation belongs to more than one cluster.
+
+k-Means Clustering Math
+========================================================
+- The idea behind K-means clustering is that a good clustering is one for which the within-cluster variation is as small as possible.
+
+- The within-cluster variation for cluster $C_k$ is a measure $W(C_k)$ of the amount by which the observations within a cluster differ from each other.
+
+$$minimize\bigg\{\sum^{K}_{k=1}\frac{1}{C_k}W(C_k)\bigg\}$$
+
+- In words, we want to partition the observations into $K$ clusters such that the total within-cluster variation, summed over all $K$ clusters, is as small as possible.
+
+k-Means Clustering Math
+========================================================
+
+- $W(C_k)$, within-cluster variation,  can be defined in many ways but the most common choice is the squared Euclidean distance
+
+$$W(C_k) = \frac{1}{|C_k|}\sum_{i,i' \in C_k}\sum^{p}_{j=1}(x_{ij}-x_{ij})^2$$
+
+- where $|C_k|$ denotes the number of observations in the $k^{th}$ cluster.
+
+- The within-cluster variation for the $k^{th}$ cluster is the sum of all ofthe pair wise squared Euclidean distances between the observations in the kth cluster, divided by the total number of observations in the kth cluster.
+
+k-Means Clustering Math
+========================================================
+- Furhtermore, the K-means clustering optimization problem is define as:
+
+$$minimize\bigg\{\sum^{K}_{k=1}\frac{1}{|C_k|}\sum_{i,i' \in C_k}\sum^{p}_{j=1}(x_{ij}-x_{ij})^2\bigg\}$$
+
+
+k-Means Clustering Algorithm to solve optimization problem
+========================================================
+1. Randomly assign a number, from 1 to K, to each of the observations. These serve as initial cluster assignments for the observations.
+
+2. Iterate until the cluster assignments stop changing:
+	- For each of the K clusters, compute the cluster centroid. The kth cluster centroid is the vector of the p feature means for the observations in the kth cluster.
+	- Assign each observation to the cluster whose centroid.
