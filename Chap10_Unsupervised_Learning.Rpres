@@ -195,4 +195,59 @@ k-Means Clustering Algorithm to solve optimization problem
 
 2. Iterate until the cluster assignments stop changing:
 	- For each of the K clusters, compute the cluster centroid. The kth cluster centroid is the vector of the p feature means for the observations in the kth cluster.
-	- Assign each observation to the cluster whose centroid.
+	- Assign each observation to the cluster whose centroid is closet.
+
+k-Means Clustering Algorithm to solve optimization problem
+========================================================
+- As the algorithm is run, the clustering obtained will continually improve until the result no longer changes. When the result no longer changes, a local optimum has been reached.
+
+- The best solution is the one with the smallest optimization value.
+- One potential disadvantage of K-means clustering is that it requires us to pre-specify the number of clusters K.
+
+Hierarchical Clustering
+========================================================
+- Hierarchical clustering is an alternative approach which does not require that we commit to a particular choice of K.
+
+- Hierarchical clustering has an added advantage over K-means clustering in that it results in an attractive tree-based representation of the observations, called a dendrogram.
+
+Bottom-up or agglomerative clustering
+========================================================
+- This is the most common type of hierarchical clustering, and refers to the fact that a dendrogram (generally depicted as an upside-down tree).
+
+Interpreting a Dendrogram
+========================================================
+- Each leaf of the dendogram represents the observation in the data.
+- The leaf that fuse into branches are observations similar to each others.
+- As is move higher up the tree, branches themselves fuse, either with leaves or other branches. 
+	- The earlier (lower in the tree) fusions occur, the more similar the groups of observations are to each other. 
+	- Observations that fuse later (near the top of the tree) can be quite different.
+- The height of the fussion, as measured on the vertical axis, indicates how different the two observations are.
+
+Interpreting a Dendrogram
+========================================================
+
+- there are $2^{n−1}$ possible reorderings of the dendrogram, where $n$ is the number of leaves. This is because at each of the $n − 1$ points where fusions occur, the positions  of the two fused branches could be swapped without affecting the meaning of the dendrogram. 
+
+- Therefore, we cannot draw conclusions about the similarity of two observations based on their proximity along the horizontal axis. Rather, we draw conclusions about the similarity of two observations based on the location on the vertical axis where branches containing those two observations first are fused.
+
+Identifing Clusters
+========================================================
+
+- Make a horizontal cut across the dendrogram.
+- The height of the cut to the dendrogram serves the same role as the K in K-means clustering: it controls the number of clusters obtained.
+- Often the choice of where to cut the dendrogram is not so clear.
+- The term hierarchical refers to the fact that clusters obtained by cutting the dendrogram at a given height are necessarily nested within the clusters obtained by cutting the dendrogram at any greater height.
+
+Identifing Clusters
+========================================================
+- Hierarchical clustering can sometimes yield worse (i.e. less accurate) results than K-means clustering for a given number of clusters.
+	- This can happen when true clusters are not nested, in the sense that the best division into three groups does not result from taking the best division into two groups and splitting up one of those groups.
+	
+Hierarchical Clustering Algorithm 
+========================================================
+1. Begin with $n$ observations and a measure (such as Euclidean distance) of all the $\binom{n}{2} = n(n − 1)/2$ pairwise dissimilarities. Treat each observation as its own cluster.
+
+2. For $i = n, n − 1,..., 2$:
+
+- Examine all pairwise inter-cluster dissimilarities among the $i$ clusters and identify the pair of clusters that are least dissimilar (that is, most similar). Fuse these two clusters. The dissimilarity between these two clusters indicates the height in the dendrogram at which the fusion should be placed.
+- Compute the new pairwise inter-cluster dissimilarities among the $i − 1$ remaining clusters.
