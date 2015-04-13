@@ -77,7 +77,7 @@ Scale Variables
 
 - Because it is undesirable for the principal components obtained to depend on an arbitrary choice of scaling, is recommended to scale each variable to have standard deviation of one before we perform PCA.
 
-- If variables are measured in the same units then is not necesarry to scale the variables to have standard deviation one before performing PCA.
+- If variables are measured in the same units then is not necessary to scale the variables to have standard deviation one before performing PCA.
 
 Proportion of Variance Explained
 ========================================================
@@ -95,14 +95,14 @@ Proportion of Variance Explained
 
 $$\sum^{p}_{j=1}Var(X_j) = \sum^{p}_{j=1}\frac{1}{n}\sum^{n}_{i=1}x^{2}_{ij}$$
 
-- The variance explained by the $m^{th}$ principal componnet is defined as:
+- The variance explained by the $m^{th}$ principal component is defined as:
 
 $$\frac{1}{n}\sum^{n}_{i=1}z^{2}_{im} = \frac{1}{n}\sum^{n}_{i=1}\Bigg(\sum^{p}_{j=1}\phi_{jm}x_{ij}\Bigg)^2$$
 
 Proportion of Variance Explained
 ========================================================
 
-- Therefore, teh PVE of the $m^{th}$ principal componet is given by:
+- Therefore, the PVE of the $m^{th}$ principal component is given by:
 
 $$\frac{\sum^{n}_{i=1}\big(\sum^{p}_{j=1}\phi_{jm}x_{ij})^2}{\sum^{p}_{j=1}\sum^{n}_{i=1}x^{2}_{ij}}$$
 
@@ -120,7 +120,7 @@ Deciding How Many Principal Components to Use
 - Typically, decide on the number of principal components required to visualize the data by examining a scree plot.
 	- By eyeballing the scree plot, look for a point at which the proportion of variance explained by each subsequent principal component drops off.
 	
-	- Ussually if no interesting patterns are found in the first few principal components, then further principal components are unlikely to be of interest.
+	- Usually if no interesting patterns are found in the first few principal components, then further principal components are unlikely to be of interest.
 	
 Deciding How Many Principal Components to Use on Supervise Learning
 ========================================================
@@ -138,9 +138,9 @@ Clustering Methods
 	
 Type of Clustering Methods
 ========================================================
-- There are many type of methods. The two specified in the book are k-mean clustering and hierarchical cluseterint
+- There are many type of methods. The two specified in the book are k-mean clustering and hierarchical clustering
 	- K-means clustering: The mathematical algorithm seek to partition the observations into a pre-specified clustering number of clusters.
-	- Hierarchical clustering: In this algorithm is not know in advance how many clusters will be obtain. The result of the procdure is a tree-like visual representation of the observations, called a dendrogram, q visual represesntation that allows a view of the clusterings obtained for each possible number of clusters, from $1$ to $n$.
+	- Hierarchical clustering: In this algorithm is not know in advance how many clusters will be obtain. The result of the procure is a tree-like visual representation of the observations, called a dendrogram, q visual representation that allows a view of the clustering obtained for each possible number of clusters, from $1$ to $n$.
 	
 k-Means Clustering
 ========================================================
@@ -149,7 +149,7 @@ k-Means Clustering
 	- first, specify the desired number of clusters $K$
 	- second, then the K-means algorithm will assign each observation to exactly one of the $K$.
 	
-k-Means Clustering thoretical procedure
+k-Means Clustering theoretical procedure
 ========================================================
 - Notation: $C_1,...,C_K$ denote sets containing the indices of the observations in each cluster. These sets satisfy two properties:
 
@@ -180,11 +180,11 @@ $$W(C_k) = \frac{1}{|C_k|}\sum_{i,i' \in C_k}\sum^{p}_{j=1}(x_{ij}-x_{ij})^2$$
 
 - where $|C_k|$ denotes the number of observations in the $k^{th}$ cluster.
 
-- The within-cluster variation for the $k^{th}$ cluster is the sum of all ofthe pair wise squared Euclidean distances between the observations in the kth cluster, divided by the total number of observations in the kth cluster.
+- The within-cluster variation for the $k^{th}$ cluster is the sum of all of the pair wise squared Euclidean distances between the observations in the kth cluster, divided by the total number of observations in the kth cluster.
 
 k-Means Clustering Math
 ========================================================
-- Furhtermore, the K-means clustering optimization problem is define as:
+- Furthermore, the K-means clustering optimization problem is define as:
 
 $$minimize\bigg\{\sum^{K}_{k=1}\frac{1}{|C_k|}\sum_{i,i' \in C_k}\sum^{p}_{j=1}(x_{ij}-x_{ij})^2\bigg\}$$
 
@@ -221,16 +221,16 @@ Interpreting a Dendrogram
 - As is move higher up the tree, branches themselves fuse, either with leaves or other branches. 
 	- The earlier (lower in the tree) fusions occur, the more similar the groups of observations are to each other. 
 	- Observations that fuse later (near the top of the tree) can be quite different.
-- The height of the fussion, as measured on the vertical axis, indicates how different the two observations are.
+- The height of the fusion, as measured on the vertical axis, indicates how different the two observations are.
 
 Interpreting a Dendrogram
 ========================================================
 
-- there are $2^{n−1}$ possible reorderings of the dendrogram, where $n$ is the number of leaves. This is because at each of the $n − 1$ points where fusions occur, the positions  of the two fused branches could be swapped without affecting the meaning of the dendrogram. 
+- there are $2^{n−1}$ possible reordering of the dendrogram, where $n$ is the number of leaves. This is because at each of the $n − 1$ points where fusions occur, the positions  of the two fused branches could be swapped without affecting the meaning of the dendrogram. 
 
 - Therefore, we cannot draw conclusions about the similarity of two observations based on their proximity along the horizontal axis. Rather, we draw conclusions about the similarity of two observations based on the location on the vertical axis where branches containing those two observations first are fused.
 
-Identifing Clusters
+Identifying Clusters
 ========================================================
 
 - Make a horizontal cut across the dendrogram.
@@ -238,7 +238,7 @@ Identifing Clusters
 - Often the choice of where to cut the dendrogram is not so clear.
 - The term hierarchical refers to the fact that clusters obtained by cutting the dendrogram at a given height are necessarily nested within the clusters obtained by cutting the dendrogram at any greater height.
 
-Identifing Clusters
+Identifying Clusters
 ========================================================
 - Hierarchical clustering can sometimes yield worse (i.e. less accurate) results than K-means clustering for a given number of clusters.
 	- This can happen when true clusters are not nested, in the sense that the best division into three groups does not result from taking the best division into two groups and splitting up one of those groups.
@@ -251,3 +251,44 @@ Hierarchical Clustering Algorithm
 
 - Examine all pairwise inter-cluster dissimilarities among the $i$ clusters and identify the pair of clusters that are least dissimilar (that is, most similar). Fuse these two clusters. The dissimilarity between these two clusters indicates the height in the dendrogram at which the fusion should be placed.
 - Compute the new pairwise inter-cluster dissimilarities among the $i − 1$ remaining clusters.
+
+Clustering Linkage
+========================================================
+
+- Linkage: Defines the dissimilarity between two groups of observations.
+	- The four most common types of linkage—complete, average, single, and centroid.
+
+A summary of the four most commonly used types of linkage in hierarchical clustering
+========================================================
+
+Linkage  | Description
+------------- | -------------
+Complete  | Maximal inter cluster dissimilarity. Compute all pairwise dissimilarities between the observations in cluster A and the observations in cluster B, and record the largest of the dissimilarities.
+Single  | Minimal inter cluster dissimilarity. Compute all pairwise dissimilarities between the observations in cluster A and the observations in cluster B, and record the smallest of these dissimilarities. Single linkage can result in extended, trailing clusters in which single observations are fused one-at-a-time.
+Average | Mean inter cluster dissimilarity. Compute all pairwise dissimilarities between the observations in cluster A and the observations in cluster B, and record the average of these dissimilarities.
+Centroid | Dissimilarity between the centroid for cluster A (a mean vector of length p) and the centroid for cluster B. Centroid linkage can result in undesirable inversions.
+
+Choice of Dissimilarity Measure
+========================================================
+
+- Euclidean distance
+- Correlation-based distance: considers two observations to be similar if their features are highly correlated, even though the observed values may be far apart in terms of Euclidean distance.
+- To select a dissimilarity measure careful attention should be paid to the type of data being clustered and the scientific question at hand.
+
+Small Decisions with Big Consequences
+========================================================
+In order to perform clustering, some decisions must be made.
+
+- Should the observations or features first be standardized in some way?
+
+- In the case of hierarchical clustering, 
+	- What dissimilarity measure should be used?
+	- What type of linkage should be used?
+	- Where should we cut the dendrogram in order to obtain clusters?
+
+- In the case of K-means clustering, how many clusters should we look for in the data?
+
+Validating the Clusters Obtained
+========================================================
+
+There exist a number of techniques for assigning a p-value to a cluster in order to assess whether there is more evidence for the cluster than one would expect due to chance. However, there has been no consensus on a single best approach.
