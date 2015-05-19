@@ -6,18 +6,39 @@ date:
 Chapter 2
 ========================================================
 
-- There are two main reasons that we may wish to estimate f : prediction and inference.
+Introduction
+========================================================
 
-- Inference
+- Statistical learning refers to a vast set of tools for understanding data.
+- These tools can be classified as supervised or unsupervised.
+	- Supervised statistical learning involves building a statistical model for predicting, or estimating, an output based on one or more inputs.
+	- Unsupervised statistical learning, there are inputs but no supervising output; nevertheless we can learn relationships and structure from such data.
+
+Supervise Learning
+========================================================
+- There are two main reasons that we may wish to estimate $f$:
+	- Prediction
+	- Inference
 
 Prediction
 ========================================================
 - Prediction: We want to obtain the unknown value of an output ($Y$) using the known values of inputs ($X's$)
-	- $$\hat{Y} = \hat{f}(X)$$
+
+$$\hat{Y} = \hat{f}(X)$$
 
 - where 
-	- $\hat{f}$ represents our estimate for $f$
-	- $\hat{Y}$ represents the resulting prediction for Y .
+	- $\hat{f}(X)$ represents the function to estimate $Y$ given the values of $X$.
+	- $\hat{Y}$ represents the resulting prediction or estimation of $Y$.
+
+Figure. 1
+========================================================
+```{r librariesDAta, echo=FALSE, results='hide'}
+library("ISLR"); library(MASS)
+```
+
+```{r scaterplot, echo=FALSE, fig.width=15, fig.height=10}
+plot(medv~lstat, Boston, main = "Median value of owner-occupied homes in $1,000  (medv) vs. Lower status of the population (percent) (lstat).")
+```
 
 Prediction
 ========================================================
@@ -26,8 +47,63 @@ $$E(Y-\hat{Y})^2 = [f(X) - \hat{f}(X)^2] + Var(\epsilon)$$
 - The accuracy of $\hat{Y}$ as a prediction for $Y$ depends on two quantities,
 	- reducible error: This error is reducible because we can potentially improve the accuracy of $\hat{f}$ by using the most appropriate statistical learning technique to estimate $f$.
 	- irreducible error: Y is also a function of $\epsilon$, which, by definition, cannot be predicted using X. Therefore, variability associated with also affects the accuracy of our predictions.
-		- No matter how well we estimate $f$, we cannot reduce the error introduced by $\epsilon$.
-		
+		- No matter how well we estimate $f$, we cannot reduce the introduced error, $\epsilon$.
+
+	
+Model 1
+========================================================
+```{r lm1, echo=FALSE}
+# First six values of Boston variables medv and lstat
+head(Boston[, c("medv", "lstat")])
+# Sinble linear model to predict new Y's.
+lm1 <- lm(medv~lstat, Boston)
+lm1
+```
+
+Prediction 1
+========================================================
+```{r newYpredict, echo=FALSE, results='hide'}
+# New Y's 
+newY <- data.frame(lstat = c(10, 20, 30, 40, 50))
+pred1 <- predict(lm1, newdata = newY)
+```
+```{r predTable, echo=FALSE}
+Ypred <- data.frame("New lstat" = newY, "medv Prediction" = pred1)
+Ypred
+
+lm1
+```
+#### Prediction Formula
+$$ medv = 34.55 + (New lstat * -0.95)$$
+
+Plot Model 1
+========================================================
+```{r PlotLm1, echo=FALSE, fig.width=15, fig.height=12}
+plot(medv~lstat, Boston, main = "Median value of owner-occupied homes in $1,000  (medv) vs. Lower status of the population (percent) (lstat).",
+		 cex = 3, col = "blue")
+
+abline(lm1, col = "red", cex = 5)
+text(x = 25, y = 35, labels = "medv = 34.55 + (New lstat * -0.95)",
+		 cex = 3)
+```
+
+Error
+========================================================
+- The quantity $\epsilon$ may contain:
+	- unmeasured variables that are useful in predicting $Y$.
+	- unmeasured variations
+
+```{r plotResid, echo=FALSE, fig.width=15, fig.height=10}
+plot(medv~lstat, Boston, main = "Median value of owner-occupied homes in $1,000  (medv) vs. Lower status of the population (percent) (lstat).",
+		 cex = 3, col = "blue")
+
+abline(lm1, col = "red", cex = 5)
+segments(x0 = Boston$lstat, y0 = Boston$medv,  y1 = lm1$fitted.values)
+
+text(x = 25, y = 35, labels = "medv = 34.55 + (New lstat * -0.95)",
+		 cex = 3)
+```
+
 Inference
 ========================================================
 - In inference we want to understand the relationship between $X$ and $Y$, or more specifically, to understand how $Y$ changes as a function of $X_1 , . . . , X_p$.
@@ -36,7 +112,17 @@ Inference
 	- Which predictors are associated with the response?
 	- What is the relationship between the response and each predictor?
 	- Can the relationship between Y and each predictor be adequately summarized using a linear equation, or is the relationship more complicated?
-	
+
+Inference
+========================================================
+Following the previous modeling example, can be said:
+
+- The predictor lstat is negativelly associated with medv.
+- For every unit increase in lstat there is .95 decrease in medv.
+- When lstat is included alone in the model it relationship with medv is statistically significant.
+- lstat predict the value of medv with a 54% accuracy (Adjusted R-Squared = 0.5432)
+	- Meaning, there are other variables that should aid in the medv prediction.
+
 How Do We Estimate f?
 ========================================================
 
@@ -53,9 +139,11 @@ Parametric methods involve a two-step approach
 Non-Parametric
 ========================================================
 
-- Non-parametric methods do not make explicit assumptions about the functional form of $f$. Instead they seek an estimate of f that gets as close to the data points as possible without being too rough or wiggly.
+- Non-parametric methods do not make explicit assumptions about the functional form of $f$. Instead they seek an estimate of $f$ that gets as close to the data points as possible without being too rough or wiggly.
 
-- Advantages: by avoiding the assumption of a particular functional form for $f$, they have the potential to accurately fit a wider range of possible shapes for $f$. Any parametric approach brings with it the possibility that the functional form used to estimate f is very different from the true $f$, in which case the resulting model will not fit the data well. In contrast, non-parametric approaches completely avoid this danger, since essentially no assumption about the form of $f$ is made.
+- Advantages: By avoiding the assumption of a particular functional form for $f$, they have the potential to accurately fit a wider range of possible shapes for $f$.  
+	- Any parametric approach brings with it the possibility that the functional form used to estimate $f$ is very different from the true $f$, in which case the resulting model will not fit the data well. 
+	- In contrast, non-parametric approaches completely avoid this danger, since essentially no assumption about the form of $f$ is made.
 
 Non-Parametric disadvantage
 ========================================================
@@ -68,16 +156,16 @@ The Trade-Off Between Prediction Accuracy and Model Interpretability
 
 - Some models are less flexible or restrictive, in the sense that they can produce just a relatively small range of shapes to estimate $f$.
 - Flexible vs non-flexible
-	- interested in inference, then restrictive models are much more interpretable.
+	- If interested in inference, then restrictive models are much more interpretable.
 	- If prediction is of interest less interpretable but more flexible and accurate models are useful.
 	
-Supervised Versus Unsupervised Learning
+Supervised versus Unsupervised Learning
 ========================================================
 - Supervised: For each observation of the predictor measurement(s) $x_i , i = 1, . . . , n$ there is an associated response measurement $y_i$ .
 	- We wish to fit a model that relates the response to the predictors, with the aim of accurately predicting the response for future observations (prediction) or better understanding the relationship between the response and the predictors (inference).
 	- examples: linear or logistic regression, Generalized Additive Model, boosting, support vector machines.
 
-Supervised Versus Unsupervised Learning
+Supervised versus Unsupervised Learning
 ========================================================
 - Unsupervised: For every observation $i = 1, . . . , n$, we observe a vector of measurements $x_i$ but no associated response $y_i$.
 - Lack a response variable that can supervise our analysis.
@@ -101,11 +189,27 @@ When assessing the quality of the fit we want to:
 
 $$MSE = \frac{1}{n}\sum_{i=1}^n(y_i-\hat{f}(x_i))^2$$
 
+MSE on lm1
+========================================================
+```{r MSE(lm1)}
+(sum((Boston$medv - predict(lm1))^2)) / nrow(Boston)
+```
+
+# Or
+
+```{r mseFunct}
+mse <- function(sm) { 
+    mse <- mean(sm$residuals^2)
+    return(mse)
+}
+mse(lm1)
+```
+
 MSE
 ========================================================
 The MSE will be **small** if the predicted responses are very close to the true responses, and will be **large** if for some of the observations, the predicted and true responses differ substantially.
 
-- we do not really care how well the method works on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unseen test data.
+- We do not really care how well the method works on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unseen test data.
 
 - We want to choose the method that gives the lowest test MSE, as opposed to the lowest training MSE.
 
@@ -114,7 +218,8 @@ The MSE will be **small** if the predicted responses are very close to the true 
 MSE
 ========================================================
 
-- Degrees of freedom is the average training MSE as a function of flexibility. The degrees of freedom is a quantity that summarizes the flexibility of a curve.
+- **Degrees of freedom** is the average training MSE as a function of flexibility.
+	- The degrees of freedom is a quantity that summarizes the flexibility of a curve.
 
 -  As model flexibility increases, training MSE will decrease, but the test MSE may not.
 
@@ -125,9 +230,87 @@ MSE
 ========================================================
 - This happens because our statistical learning procedure is working too hard to find patterns in the training data, and may be picking up some patterns that are just caused by random chance rather than by true properties of the unknown function $f$.
 
-- When we overfit the training data, the test MSE will be very large because the supposed patterns that the method found in the training data simply don’t exist in the test data.
+- When we over-fit the training data, the test MSE will be very large because the supposed patterns that the method found in the training data simply don’t exist in the test data.
 
-- Overfitting refers specifically to the case in which a less flexible model would have yielded a smaller test MSE.
+- Over-fitting refers specifically to the case in which a less flexible model would have yielded a smaller test MSE.
+
+Over-fitting model
+========================================================
+
+```{r}
+lm1 <- lm(medv ~ lstat, data = Boston)
+lm2 <- lm(medv ~ lstat + rm + dis + tax, data = Boston)
+lm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = Boston)
+
+mse(lm1); mse(lm2); mse(lm3)
+```
+Mean Square Error for fitted models
+========================================================
+
+```{r mse.df, echo=FALSE}
+mse.df <- data.frame(model = c(1,2,3), mse = c(mse(lm1), mse(lm2), mse(lm3)))
+```
+
+```{r plot, echo=FALSE, fig.width=15, fig.height=10}
+plot(mse.df$model, mse.df$mse, type = "o", col = "red", lwd = 4,
+		 main = "Mean Square Error for fitted models")
+
+```
+
+train and test mse plot --- check test mse method 
+========================================================
+```{r echo=FALSE, results='hide'}
+library("ISLR"); library(MASS)
+
+dim(Boston)
+
+set.seed(100)
+train <- Boston[sample(nrow(Boston), size = nrow(Boston)/2),]
+dim(train)
+
+test <- Boston[!(rownames(Boston) %in% rownames(train)),]
+dim(test)
+
+table(rownames(train) == rownames(test))
+
+#model on train data
+lm1 <- lm(medv ~ lstat, data = train)
+lm2 <- lm(medv ~ lstat + rm + dis + tax, data = train)
+lm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = train)
+
+
+mse <- function(sm) { 
+	mse <- mean(sm$residuals^2)
+	return(mse)
+}
+
+mse(lm1); mse(lm2); mse(lm3)
+
+# predict on test data
+
+tm1 <- lm(medv ~ lstat, data = test)
+tm2 <- lm(medv ~ lstat + rm + dis + tax, data = test)
+tm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = test)
+
+mse(tm1); mse(tm2); mse(tm3)
+
+mse.df <- data.frame(model = c(1,2,3), mse_train = c(mse(lm1), mse(lm2), mse(lm3)),
+										 mse_test = c(mse(tm1), mse(tm2), mse(tm3))
+)
+mse.df
+```
+```{r plotTTmse, echo=FALSE, fig.width=15, fig.height=10}
+plot(mse.df$model, mse.df$mse_train, type = "o", col = "red", lwd = 4,
+		 main = "Mean Square Error for fitted models", ylim=c(ymin = 10, ymax = 40)
+)
+text(x = 2, y = 35, "train mse")
+
+points(mse.df$model, mse.df$mse_test)
+lines(mse.df$model, mse.df$mse_test, col = "green", lwd = 4)
+text(x = 2, y = 20, "test mse")
+
+```
+
 
 The Bias-Variance Trade-Off
 ========================================================
@@ -162,7 +345,7 @@ The Bias-Variance Trade-Off: Equation
 ========================================================
 The mentioned can be summarized with the following equation
 
-$$E(y_0 - \hat{f}(x_0))^2 = Var\hat{f}(x_0) + [Bias\hat{f}(x_0)] + Var(\epsilon)$$
+$$E(y_0 - \hat{f}(x_0))^2 = Var\hat{f}(x_0) + [Bias(\hat{f}(x_0))]^2 + Var(\epsilon)$$
 
 The Classification Setting
 ========================================================
@@ -186,7 +369,7 @@ the Bayes error rate.
 
 K-Nearest Neighbors
 ========================================================
-- in real data, we do not know the conditional distribution of $Y$ given $X$, and so computing the Bayes classifier is impossible.
+- In real data, we do not know the conditional distribution of $Y$ given $X$, and so computing the Bayes classifier is impossible.
 
 - K-Nearest Neighbors: Given a positive integer $K$ and a test observation $x_0$, the KNN classifier first identifies the $K$ points in the training data that are closest to $x_0$ , represented by $N_0$.
 
@@ -204,5 +387,5 @@ K-Nearest Neighbors
 The Classification Setting
 ========================================================
 
-- Other types of Classification Methods are: Support Vector Machine, forms of Logistic and Linear Regression and Dyscriminant Analysis
+- Other types of Classification Methods are: Support Vector Machine, forms of Logistic and Linear Regression and Discriminant Analysis
 
