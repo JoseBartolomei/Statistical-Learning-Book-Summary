@@ -189,7 +189,33 @@ When assessing the quality of the fit we want to:
 
 $$MSE = \frac{1}{n}\sum_{i=1}^n(y_i-\hat{f}(x_i))^2$$
 
-MSE on lm1
+MSE Steps
+========================================================
+1. Obtain the Information Matrix
+
+<center>
+
+Obs.  | $Y$		| $\hat{Y}$	  | $Y - \hat{Y}$
+----- | ----- | ----------- | -------------
+1  		| $Y_1$	|	$\hat{Y}_1$	| $Y_1 - \hat{Y}_1$
+2  		| $Y_2$	|	$\hat{Y}_2$	| $Y_2 - \hat{Y}_2$
+3  		| $Y_3$	|	$\hat{Y}_3$	| $Y_2 - \hat{Y}_2$
+... 	| $Y_{...}$	|$\hat{Y}_{...}$ | $Y_{...} - \hat{Y}_{...}$
+n  		| $Y_n$	|$\hat{Y}_n$	| $Y_n - \hat{Y}_n$
+</center>
+
+MSE Steps (continuation)
+========================================================
+2. Sum the differences between the observed and predicted values = $Z$
+
+$$\sum_{i=1}^n(Y_i-\hat{Y_i}) = Z$$
+
+3. Squared $Z$ and divided it over the total number of observations ($n$)
+
+$$\frac{Z^2}{n} = MSE$$
+
+
+Train Data MSE on lm1
 ========================================================
 ```{r MSE(lm1)}
 (sum((Boston$medv - predict(lm1))^2)) / nrow(Boston)
@@ -279,11 +305,6 @@ lm2 <- lm(medv ~ lstat + rm + dis + tax, data = train)
 lm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = train)
 
 
-mse <- function(sm) { 
-	mse <- mean(sm$residuals^2)
-	return(mse)
-}
-
 mse(lm1); mse(lm2); mse(lm3)
 
 # predict on test data
@@ -292,6 +313,7 @@ tm1 <- lm(medv ~ lstat, data = test)
 tm2 <- lm(medv ~ lstat + rm + dis + tax, data = test)
 tm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = test)
 
+### Check the Adequacy of using the mse function on the test data #####
 mse(tm1); mse(tm2); mse(tm3)
 
 mse.df <- data.frame(model = c(1,2,3), mse_train = c(mse(lm1), mse(lm2), mse(lm3)),
@@ -310,7 +332,6 @@ lines(mse.df$model, mse.df$mse_test, col = "green", lwd = 4)
 text(x = 2, y = 20, "test mse")
 
 ```
-
 
 The Bias-Variance Trade-Off
 ========================================================
