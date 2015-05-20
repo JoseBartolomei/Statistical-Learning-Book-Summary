@@ -80,11 +80,12 @@ Plot Model 1
 ========================================================
 ```{r PlotLm1, echo=FALSE, fig.width=15, fig.height=12}
 plot(medv~lstat, Boston, main = "Median value of owner-occupied homes in $1,000  (medv) vs. Lower status of the population (percent) (lstat).",
-		 cex = 3, col = "blue")
+		 cex = 1, col = "blue")
 
 abline(lm1, col = "red", cex = 5)
 text(x = 25, y = 35, labels = "medv = 34.55 + (New lstat * -0.95)",
 		 cex = 3)
+
 ```
 
 Error
@@ -278,12 +279,22 @@ mse.df <- data.frame(model = c(1,2,3), mse = c(mse(lm1), mse(lm2), mse(lm3)))
 ```
 
 ```{r plot, echo=FALSE, fig.width=15, fig.height=10}
-plot(mse.df$model, mse.df$mse, type = "o", col = "red", lwd = 4,
+plot(x = mse.df$model, y = mse.df$mse, type = "o", col = "red", lwd = 4,
 		 main = "Mean Square Error for fitted models")
 
 ```
 
-train and test mse plot --- check test mse method 
+Test Mean Square Error
+========================================================
+$$Test MSE = Ave(\hat{f}_{(x_0)} - y_0)^2$$
+
+where,
+
+$\hat{f}_{(x_0)}$ = fitted values
+
+$y_0$ = test observations
+
+Train and Test MSE plot
 ========================================================
 ```{r echo=FALSE, results='hide'}
 
@@ -301,35 +312,39 @@ dim(test)
 lm1 <- lm(medv ~ lstat, data = train)
 lm2 <- lm(medv ~ lstat + rm + dis + tax, data = train)
 lm3 <- lm(medv ~ lstat + I(lstat^2) + rm + I(rm^2) + dis + tax, data = train)
+lm4 <- lm(medv ~ . + I(lstat^2) + I(rm^2), data = train)
 
-mse(lm1); mse(lm2); mse(lm3)
+mse(lm1); mse(lm2); mse(lm3); mse(lm4)
 
 # predict on test data
 
 tm1 <- predict(lm1, newdata = test)
 tm2 <- predict(lm2, newdata = test)
 tm3 <- predict(lm3, newdata = test)
+tm4 <- predict(lm4, newdata = test)
 
 ### Check the Adequacy of using the mse function on the test data #####
-mset <- function(predicted_vals, test_y_vals, data){
+mset <- function(predicted_vals, test_y_vals){
 	 m = predicted_vals
 	 y = test_y_vals
 	 
-	mse_t <- sum((m - y)^2) / nrow(data)
+	mse_t <- mean((m - y)^2)
 	
 	return(mse_t)
 
 # test function
-	# m = sum((tm1 - test$medv)^2) / (nrow(test) - 2)
+	# m = sum((tm1 - test$medv)^2) / (nrow(test))
+	#		= mean((tm1 - test$medv)^2)  # Following Book Notation
 	}
 
+mt1 <- mset(tm1, test$medv)
+mt2 <- mset(tm2, test$medv)
+mt3 <- mset(tm3, test$medv)
+mt4 <- mset(tm4, test$medv)
 
-mt1 <- mset(tm1, test$medv, test)
-mt2 <- mset(tm2, test$medv, test)
-mt3 <- mset(tm3, test$medv, test)
-
-mse.df <- data.frame(model = c(1,2,3), mse_train = c(mse(lm1), mse(lm2), mse(lm3)),
-										 mse_test = c(mt1, mt2, mt3)
+mse.df <- data.frame(model = c(1,2,3,4), mse_train = c(mse(lm1), mse(lm2), mse(lm3),
+																										 mse(lm4)),
+										 mse_test = c(mt1, mt2, mt3, mt4)
 										 )
 mse.df
 ```
@@ -339,11 +354,11 @@ plot(mse.df$model, mse.df$mse_train, type = "o", col = "red", lwd = 4,
 		 ylim=c(ymin = min(mse.df$mse_train) - 10,
 		 			 ymax = max(mse.df$mse_train) + 10)
 )
-text(x = mean(mse.df$model), y = mean(mse.df$mse_train), "train mse")
+text(x = mean(mse.df$model), y = mean(mse.df$mse_train + 1), "train mse")
 
 points(mse.df$model, mse.df$mse_test)
 lines(mse.df$model, mse.df$mse_test, col = "green", lwd = 4)
-text(x = mean(mse.df$model), y = mean(mse.df$mse_test), "test mse")
+text(x = mean(mse.df$model), y = mean(mse.df$mse_test) + 1, "test mse")
 
 ```
 
